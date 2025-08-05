@@ -21,7 +21,7 @@
     }
 
     .container {
-      max-width: 1300px;
+      max-width: 1350px;
       margin: 0 auto;
       padding: 0 4rem;
     }
@@ -66,6 +66,10 @@
     .delay-8 { animation-delay: 1.1s; }
     .delay-9 { animation-delay: 1.3s; }
   
+    .highlight {
+      color: #B8563A;
+      font-weight: bold;
+    }
 
     nav {
       background-color: #AEC8A4;
@@ -171,7 +175,7 @@
     }
 
     .cv-button {
-      background-color: #8A784E;
+      background-color: #B8563A ;
       color: white;
       padding: 0.6rem 1.2rem;
       border: none;
@@ -184,7 +188,7 @@
     }
 
     .cv-button:hover {
-      background-color: #3B3B1A;
+      background-color: #B8563A;
       color: white;
     }
 
@@ -213,11 +217,16 @@
     .side-icons a i {
       font-size: 1.5rem;
       color: #3B3B1A;
-      transition: color 0.3s;
+      transition: color 0.3s, transform 0.3s;;
     }
 
     .side-icons a:hover i {
       color: #8A784E;
+    }
+
+    .side-icons a:hover i {
+      color: #8A784E;
+      transform: translateY(-5px);
     }
 
     .vertical-line {
@@ -227,7 +236,102 @@
       margin: 0 auto;
       opacity: 0.6;
       margin-top: auto;
+      margin: 2rem auto 0 auto; /* ✅ Horizontally centers the block */
     }
+
+    .education-container {
+      width: fit-content;
+      display: flex;
+      align-items: center;
+      gap: 4rem;
+      margin: 2rem auto 0 auto;
+      flex-wrap: wrap;
+    }
+
+    .edu-menu {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      min-width: 150px;
+      position: relative;
+      border-left: 3px solid #ccc;
+      flex-shrink: 0;            /* ✅ Prevents stretching */
+      align-self: flex-start;    /* ✅ Locks height to content */
+    }
+
+    .edu-menu li {
+      padding: 0.75rem 1rem;
+      padding-left: 1.5rem;
+      cursor: pointer;
+      color: #3B3B1A;
+      position: relative;
+      transition: background-color 0.3s, color 0.3s;
+      display: flex;
+      align-items: center;
+      border-radius: 0px;
+      height: auto;
+    }
+    
+    .edu-menu li:hover {
+      background-color: #AEC8A4;
+    }
+    
+    .edu-menu li.active {
+      background-color: #AEC8A4; /* ✅ Highlight color */
+      color: #3B3B1A;
+    }
+
+    .edu-menu li.active .edu-indicator {
+      background-color: #B8563A
+    
+    }
+
+    .edu-indicator {
+      display: inline-block;
+      width: 3px;
+      height: 100%;
+      background-color: transparent;
+      margin-right: 10px;
+      position: absolute;
+      left: -3px;
+      top: 0;
+    }
+
+    .edu-details {
+      width: 600px;
+      max-width:100%
+    }
+
+    .edu-details ul {
+      list-style-type: circle;
+      padding-left: 1.5rem;
+    }
+
+    .edu-content h3 {
+      font-size: 1.3rem;
+      color: #3B3B1A;
+      margin-bottom: 0.75rem;
+    }
+
+    .edu-content ul li {
+      margin-bottom: 0.75rem; /* or adjust as needed */
+    }
+
+    .edu-years {
+      font-size: 0.85rem;
+      color: #666;
+      margin-bottom: 1rem;
+    }
+    .edu-content.active {
+      display: block;
+    }
+
+    .edu-wrapper {
+      max-width: 850px;  /* Same width as education-container */
+      margin: 0 auto;
+      padding: 0 1rem;    /* Optional: add a bit of side padding */
+    }
+
   </style>
 </head>
 
@@ -238,7 +342,7 @@
     <a href="#experience" class="fall delay-2">Experience</a>
     <a href="#about" class="fall delay-3">About me</a>
     <div class="cv-box fall delay-4">
-      <a class="cv-button" href="CV-6.pdf" target="_blank">Resume</a>
+      <a class="cv-button" href="img/CV-6.pdf" target="_blank">Resume</a>
     </div>
   </nav>
 
@@ -247,22 +351,59 @@
       <div class="hero-text">
         <p class="intro fall delay-5">Hi, my name is</p>
         <h1 class="big-name fall delay-6">Luís Leitão.</h1>
-        <h2 class="big-sub fall delay-7">Physics. Machine learning. Complex systems. Financial markets.</h2>
+        <h2 class="big-sub fall delay-7">  I want to build models that go brrrr</h2>
         <p class="description fall delay-8">
-          I'm an Engineering Physics student with a deep interest in building data-driven models that help explain complex systems and support real-world decision-making.
-        </p>
+          I'm an <span class="highlight">Engineering Physics</span> student with a deep interest in  <span class="highlight">data-driven models</span> that help explain complex systems and support <span class="highlight">real-world decision-making</span>. </p>
       </div>
       <div class="hero-right">
-        <div class="profile-pic fall delay-9" style="background-image: url('IMG_0279 2.JPG');"></div>
+        <div class="profile-pic fall delay-8" style="background-image: url('img/IMG_0279 2.JPG');"></div>
       </div>
     </div>
-
+  </div>
+  
     <section id="education">
-      <h2>Education</h2>
-      <ul>
-        <li><strong>FCUL</strong> — bla bla bla</li>
-      </ul>
+      <div class = "edu-wrapper">
+        <h2>Education</h2>
+        <div class="education-container">
+          <ul class="edu-menu">
+            <li onclick="showEdu('fcul', this)" class="active"><span class="edu-indicator"></span>ULisboa</li>
+            <li onclick="showEdu('sorbonne', this)"><span class="edu-indicator"></span>Sorbonne</li>
+            <li onclick="showEdu('nova', this)"><span class="edu-indicator"></span>NOVA</li>
+          </ul>
+        
+          <div class="edu-details">
+            <div class="edu-content" id="fcul">
+              <h3>MSc in Engineering Physics</h3>
+              <p class="edu-years">Sep 2023 – Present</p>
+              <ul>
+                <li>Coursework spanning optics, nuclear physics, control theory, and complex systems;</li>
+                <li>Strong focus on stochastic calculus;</li>
+                <li>Hands-on course on neutron detection techniques at the JSI TRIGA research nuclear reactor, Ljubljana. </li>
+                <li>Master thesis on atomic physics (to complete).</li>
+              </ul>
+            </div>
+          
+            <div class="edu-content" id="sorbonne" style="display: none;">
+              <h3>Erasmus Exchange</h3>
+              <p class="edu-years">Sep 2024 – Jan 2025</p>
+              <ul>
+                <li>Coursework divided between experimental physics and machine learning;</li>
+                <li>Optics, lasers, and metrology (1/3);</li>
+                <li>Machine learning for physicists (2/3). (complementar mais esta parte?)</li>
+              </ul>
+
+            <div class="edu-content" id="nova" style="display: none;">
+              <ul>
+                <li>Quantitative Finance Summer Workshop</li>
+                <li>Projects in risk modeling and portfolio optimization</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
+
+
 
     <section id="experience">
       <h2>Experience</h2>
@@ -286,4 +427,36 @@
   </div>
 
 </body>
+
+<script>
+  function showEdu(id, el) {
+    // Hide all content
+    document.querySelectorAll('.edu-content').forEach(e => {
+      e.style.display = 'none';
+      e.classList.remove('active');
+    });
+
+    // Show selected
+    const selected = document.getElementById(id);
+    selected.style.display = 'block';
+    selected.classList.add('active');
+
+    // Remove 'active' from all menu items
+    document.querySelectorAll('.edu-menu li').forEach(item => {
+      item.classList.remove('active');
+    });
+
+    // Add 'active' to clicked item
+    el.classList.add('active');
+  }
+
+  // Set first tab active on load
+  document.addEventListener("DOMContentLoaded", () => {
+    const firstTab = document.querySelector('.edu-menu li');
+    if (firstTab) firstTab.click();
+  });
+</script>
+
+
+
 </html>
