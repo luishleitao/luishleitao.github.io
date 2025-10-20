@@ -996,7 +996,7 @@
     @media (max-width: 900px){
       /* make the rail a bit closer to the dots */
       #experience .exp-timeline{
-        padding-top: 2px;            /* was 28px */
+        padding-top: 20px;            /* was 28px */
       }
       #experience .exp-timeline::before{
         top: 10px;                    /* was 14px */
@@ -1021,6 +1021,45 @@
         padding-top: 1rem;            /* was 2.25rem (room for X) */
       }
     }
+
+    /* MOBILE: circles are the primary tap target + tighter spacing */
+    @media (max-width: 900px){
+      /* reduce space between the rail and the text panel */
+      #experience .exp-timeline{
+        padding-top: 16px;          /* was 20–28px */
+      }
+      #experience .exp-timeline::before{
+        top: 10px;                  /* keep the rail close */
+      }
+
+      /* circles spacing (sit closer to the panel) */
+      #experience .exp-node-img{
+        margin-top: 2px;            /* was 4–8px */
+        cursor: pointer;            /* show it’s clickable */
+      }
+
+      /* panel sits right under the circles */
+      #experience #exp-panel{
+        margin-top: .3rem;          /* was .35–.8rem */
+        padding-top: 1rem;          /* no extra room for an X */
+      }
+
+      /* visual active state when a circle is selected */
+      #experience .exp-node.active .exp-node-img{
+        box-shadow: 0 0 0 2px var(--accent), 0 0 0 6px rgba(184,86,58,.15);
+      }
+    }
+
+    /* DESKTOP: never show the mobile panel/X */
+    @media (min-width: 901px){
+      #experience #exp-panel,
+      #experience .exp-panel-close{ display: none !important; }
+    }
+
+    @media (max-width: 900px){
+      #experience .exp-dot{ display:none !important; }
+    }
+
 
 
   </style>
@@ -1411,57 +1450,56 @@
       }
     });
   })();
-(function(){
-    const section  = document.getElementById('experience');
-    if (!section) return;
-
-    const timeline = section.querySelector('.exp-timeline');
-    const panel    = section.querySelector('#exp-panel');
-    const panelBody= panel ? panel.querySelector('.exp-panel-body') : null;
-
-    if (!timeline || !panel || !panelBody) return;
-
-    const isMobile = () => window.matchMedia('(max-width: 900px)').matches;
-
-    function renderFromNode(node){
-      const content = node.querySelector('.exp-content');
-      if (!content) return;
-      // highlight active (dot turns orange via your CSS)
-      timeline.querySelectorAll('.exp-node').forEach(n => n.classList.remove('active'));
-      node.classList.add('active');
-      // put details below the rail (no toggle/close)
-      panelBody.innerHTML = content.innerHTML;
-    }
-
-    // Click **only the dots** on mobile
-    timeline.addEventListener('click', (e) => {
-      if (!isMobile()) return;              // desktop keeps original behavior
-      const dot  = e.target.closest('.exp-dot');
-      if (!dot) return;
-      const node = dot.closest('.exp-node');
-      if (node) renderFromNode(node);
-    });
-
-    // Keyboard (Enter/Space) on the dot
-    timeline.addEventListener('keydown', (e) => {
-      if (!isMobile()) return;
-      const dot  = e.target.closest('.exp-dot');
-      if (!dot) return;
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        const node = dot.closest('.exp-node');
-        if (node) renderFromNode(node);
+    (function(){
+      const section  = document.getElementById('experience');
+      if (!section) return;
+    
+      const timeline = section.querySelector('.exp-timeline');
+      const panel    = section.querySelector('#exp-panel');
+      const panelBody= panel ? panel.querySelector('.exp-panel-body') : null;
+    
+      if (!timeline || !panel || !panelBody) return;
+    
+      const isMobile = () => window.matchMedia('(max-width: 900px)').matches;
+    
+      function renderFromNode(node){
+        const content = node.querySelector('.exp-content');
+        if (!content) return;
+    
+        // mark active
+        timeline.querySelectorAll('.exp-node').forEach(n => n.classList.remove('active'));
+        node.classList.add('active');
+    
+        // render details below the rail
+        panelBody.innerHTML = content.innerHTML;
       }
-    });
-
-    // Show something by default on mobile
-    function ensureDefault(){
-      if (!isMobile()) return;
-      const active = timeline.querySelector('.exp-node.active') || timeline.querySelector('.exp-node');
-      if (active) renderFromNode(active);
-    }
-    ensureDefault();
-    window.addEventListener('resize', ensureDefault);
-  })();
+  
+      // MOBILE: clicking anywhere on the circle/node opens the text
+      timeline.addEventListener('click', (e) => {
+        if (!isMobile()) return;
+        const node = e.target.closest('.exp-node');
+        if (node) renderFromNode(node);
+      });
+  
+      // MOBILE: keyboard (Enter/Space) on the node or image
+      timeline.addEventListener('keydown', (e) => {
+        if (!isMobile()) return;
+        if (e.key !== 'Enter' && e.key !== ' ') return;
+        const node = e.target.closest('.exp-node');
+        if (node){
+          e.preventDefault();
+          renderFromNode(node);
+        }
+      });
+  
+      // Ensure something is shown on initial mobile load
+      function ensureDefault(){
+        if (!isMobile()) return;
+        const active = timeline.querySelector('.exp-node.active') || timeline.querySelector('.exp-node');
+        if (active) renderFromNode(active);
+      }
+      ensureDefault();
+      window.addEventListener('resize', ensureDefault);
+    })();
 </script>
 </html>
