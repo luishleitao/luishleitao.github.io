@@ -842,77 +842,88 @@
       .edu-details { padding-top: 0.5rem; }
     }
 
-        /* ============================
-       EXPERIENCE – MOBILE OVERLAY
-       Keep circles on a left rail; show details as a panel on right
-       ============================ */
+    /* =========================================
+       EXPERIENCE (MOBILE) — keep 3 circles left,
+       panel on the right, fix X + line length
+       ========================================= */
     @media (max-width: 900px){
-      /* Use the original alternating 2-column nodes */
-      #experience .edu-wrapper{ display: block; }
-      #experience .exp-wrapper{ max-width:1100px; margin:0 auto; padding:0 1rem; }
-      #experience .exp-timeline{
+      /* Ensure the Experience area is a 2-column grid (left rail + right panel) */
+      #experience .edu-wrapper{
+        display: grid;
+        grid-template-columns: 120px 1fr; /* left rail width + flexible panel */
+        column-gap: 14px;
+        align-items: stretch;              /* both columns same row height */
         position: relative;
-        padding: 2rem 0;
-        min-height: var(--exp-bar);         /* restore original fixed min-height */
+        overflow: hidden;                   /* hard stop so nothing bleeds into About */
+      }
+  
+      /* Title spans both columns (leave your existing styles intact) */
+      #experience .section-title-line{ grid-column: 1 / -1; }
+  
+      /* Left column (timeline) fills the row height */
+      #experience .exp-wrapper{ grid-column: 1; }
+      #experience .exp-timeline{
+        padding: .25rem 0 .5rem;
+        min-height: unset;   /* no fixed heights on mobile */
+        height: 100%;        /* match panel height so the bar ends correctly */
       }
       #experience .exp-timeline::before{
-        left: 50%;
+        left: 24px;          /* keep your rail position */
         top: 0;
-        bottom: auto;
-        height: var(--exp-bar);
+        bottom: 0;           /* bar ends at the bottom of the timeline column */
+        height: 100%;        /* guarantees no bleed into About */
         width: 3px;
-        background: var(--accent2);
-        transform: translateX(-50%);
+        background: var(--accent2, #8A784E);
+        transform: none;
       }
   
-      /* Restore node sizing/placement */
+      /* Nodes still aligned to the left rail */
       #experience .exp-node{
-        position: relative;
-        width: 50%;
-        padding: 0 2rem 2rem;
-        min-height: var(--exp-step);
-        align-items: initial;
-      }
-      #experience .exp-node:nth-child(odd){
+        width: 100%;
         left: 0;
-        padding-right: 3rem;
-        align-items: flex-end;
-      }
-      #experience .exp-node:nth-child(even){
-        left: 50%;
-        padding-left: 3rem;
+        padding: 0 0 1rem 3.75rem; /* space for the circle */
+        min-height: unset;
         align-items: flex-start;
       }
-  
-      /* Restore inline cards (so text sits beside its image) */
-      #experience .exp-content{
-        position: absolute !important;
-        display: none !important;
-        max-width: 480px !important;
-        background: #fff !important;
-        border: 1px solid rgba(0,0,0,.06) !important;
-        border-radius: 14px !important;
-        padding: 1rem 1.1rem !important;
-        box-shadow: 0 10px 22px rgba(0,0,0,.06) !important;
-        top: 11rem !important;
+      #experience .exp-node + .exp-node{ margin-top: .6rem; }
+      #experience .exp-node-img{
+        --exp-img: 80px;
+        width: 80px; height: 80px;
+        box-shadow: 0 0 0 2px var(--accent2, #8A784E);
       }
-      #experience .exp-node.active .exp-content{ display: block !important; }
+      #experience .exp-dot{
+        left: 24px; right: auto;
+        top: 28px;
+        width: 26px; height: 26px;
+        transform: translate(-50%, 0);
+      }
   
-      /* Hide the mobile side panel entirely */
-      #experience #exp-panel{ display: none !important; }
+      /* Hide the inline desktop cards so text isn't on top of images */
+      #experience .exp-content{ display: none !important; }
+  
+      /* Right column = details panel (STATIC column, not overlay) */
+      #experience #exp-panel{
+        grid-column: 2;
+        position: relative;
+        display: block;
+        background: #fff;
+        border: 1px solid rgba(0,0,0,.06);
+        border-radius: 14px;
+        box-shadow: 0 6px 16px rgba(0,0,0,.06);
+        padding: 1rem 1rem 1.1rem;
+        /* Give the close button its own space so it never sits on top of text */
+        padding-top: 2.25rem;  /* <-- key line: moves text down under the X */
+      }
+  
+      /* Close button pinned in the panel’s corner, away from the text */
+      #experience .exp-panel-close{
+        position: absolute;
+        top: .5rem;
+        right: .5rem;
+        z-index: 1;
+      }
     }
-    
-    /* ===== Experience: keep close button off the text (you liked this) ===== */
-    #experience .exp-panel { position: relative; padding-top: 2.25rem; }
-    #experience .exp-panel-close { position: absolute; top: .5rem; right: .5rem; z-index: 1; }
-    
-    /* ===== Experience bar should not bleed into About (you liked this) ===== */
-    @media (min-width: 901px){
-      #experience .exp-timeline { min-height: unset; }
-      #experience .exp-timeline::before { height: 100%; }
-    }
-    /* Extra safety to clip any overflow */
-    #experience .edu-wrapper { position: relative; overflow: hidden; }
+
 
   </style>
 </head>
