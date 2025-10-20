@@ -992,35 +992,6 @@
       #experience #exp-panel{ display: none !important; }
     }
 
-    /* MOBILE: reduce gap between the circles row and the details panel */
-    @media (max-width: 900px){
-      /* make the rail a bit closer to the dots */
-      #experience .exp-timeline{
-        padding-top: 20px;            /* was 28px */
-      }
-      #experience .exp-timeline::before{
-        top: 10px;                    /* was 14px */
-      }
-      #experience .exp-dot{
-        top: 10px;                    /* align dot to the new rail */
-      }
-
-      /* bring the circles closer under the rail */
-      #experience .exp-node-img{
-        margin-top: 4px;              /* was 8px */
-      }
-
-      /* shrink wrapper-to-panel gap */
-      #experience .exp-wrapper{
-        margin-bottom: .25rem;        /* was .8rem earlier */
-      }
-
-      /* bring the text panel up, and remove extra top padding (we hid the X) */
-      #experience #exp-panel{
-        margin-top: .35rem;           /* was .8rem */
-        padding-top: 1rem;            /* was 2.25rem (room for X) */
-      }
-    }
 
     /* MOBILE: circles are the primary tap target + tighter spacing */
     @media (max-width: 900px){
@@ -1094,7 +1065,7 @@
   <div class="container">
     <div class="hero">
       <div class="hero-text">
-        <p class="intro fall delay-5">Hi, my name is l</p>
+        <p class="intro fall delay-5">Hi, my name is</p>
         <h1 class="big-name fall delay-6">Luís Leitão.</h1>
         <h2 class="big-sub fall delay-7">  I want to build data-driven models that explain complexity and support decision-making</h2>
         <p class="description fall delay-8">
