@@ -35,10 +35,7 @@
     img{max-width:100%;display:block}
     a{color:inherit}
 
-    .container{max-width:1350px;margin:0 auto;padding:0 1.25rem;}
-    @media (min-width:900px){
-      .container{padding:0 4rem;}
-    }
+    .container{max-width:1350px;margin:0 auto;padding:0 clamp(1rem,2.5vw,4rem)}
 
     /* ===== LITTLE ANIMS (respect reduced motion) ===== */
     @media (prefers-reduced-motion:no-preference){
@@ -216,7 +213,38 @@
        ======================== */
     .site-footer{max-width:1100px;margin:2.5rem auto 2rem;padding:0 1rem;text-align:center;font-size:var(--step--1);color:var(--muted)}
     .site-footer a{text-decoration:underline}
-  </style>
+  
+
+    /* ========================
+       EXPERIENCE — MOBILE REWRITE (clean cards)
+       ======================== */
+    @media (max-width: 900px){
+      .exp-wrapper{padding:0}
+      .exp-timeline{padding:0;min-height:auto}
+      .exp-timeline::before{left:20px;transform:none;height:100%}
+
+      /* Layout each entry as a simple two‑column grid: [rail/img] [content] */
+      .exp-node{width:100%;left:0;min-height:unset;padding:0 0 1.25rem 0;margin:0;display:grid;grid-template-columns:40px 1fr;align-items:center;column-gap:.9rem;text-align:left}
+      .exp-node + .exp-node{margin-top:1rem}
+
+      /* Hide the clickable dot on small screens; tapping the card isn’t needed */
+      .exp-dot{display:none}
+
+      /* Smaller, consistent logo/photo sizes */
+      .exp-node-img{--exp-img:56px;width:56px;height:56px;border-radius:50%;box-shadow:0 0 0 2px var(--muted)}
+
+      /* Use the header container purely for placement */
+      .exp-node-header{display:contents}
+
+      /* Cards: always visible text; full-width under the image */
+      .exp-content{position:static;display:block;margin:.25rem 0 0 0;max-width:unset;border-radius:12px}
+
+      /* Remove left/right offsets used for the alternating desktop layout */
+      .exp-node:nth-child(odd),
+      .exp-node:nth-child(even){padding:0;align-items:start}
+    }
+
+</style>
 </head>
 
 <body>
@@ -247,7 +275,7 @@
     <!-- ======================== HERO ======================== -->
     <section class="hero" id="home">
       <div class="hero-text">
-        <p class="intro fall delay-5">Hi, my name is l</p>
+        <p class="intro fall delay-5">Hi, my name is</p>
         <h1 class="big-name fall delay-6">Luís Leitão.</h1>
         <h2 class="big-sub fall delay-7">I want to build data-driven models that explain complexity and support decision-making</h2>
         <p class="description fall delay-8">
