@@ -2,701 +2,274 @@
 <html lang="en">
 <head>
   <!-- =========================================================
-       HEAD: Meta, Title, External Icons, and CSS Styles
+       META & HEAD
        ========================================================= -->
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Luís Leitão</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
   <style>
-    /* =========================================================
-       CSS: RESET / BASE
-       - Normalize margins, paddings
-       - Global font and theme colors
-       ========================================================= */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      scroll-behavior: smooth;
+    /* ========================
+       THEME & FLUID TYPOGRAPHY
+       ======================== */
+    :root{
+      --bg: #E7EFC7;
+      --text: #3B3B1A;
+      --muted:#8A784E;
+      --accent:#B8563A;
+      --accent2:#AEC8A4;
+      --card:#FFFFFF;
+      /* fluid type scales */
+      --step--1: clamp(.84rem, .82rem + .25vw, .95rem);
+      --step-0:  clamp(1rem, .98rem + .35vw, 1.1rem);
+      --step-1:  clamp(1.15rem, 1.08rem + .6vw, 1.35rem);
+      --step-2:  clamp(1.35rem, 1.2rem + 1vw, 1.75rem);
+      --step-3:  clamp(1.8rem, 1.45rem + 2vw, 2.5rem);
+      --step-4:  clamp(2.4rem, 1.8rem + 3vw, 3.5rem);
     }
 
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #E7EFC7;
-      color: #3B3B1A;
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%}
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,"Helvetica Neue",Arial,"Noto Sans",sans-serif;background:var(--bg);color:var(--text);line-height:1.5}
+    img{max-width:100%;display:block}
+    a{color:inherit}
+
+    .container{max-width:1350px;margin:0 auto;padding:0 clamp(1rem,2.5vw,4rem)}
+
+    /* ===== LITTLE ANIMS (respect reduced motion) ===== */
+    @media (prefers-reduced-motion:no-preference){
+      @keyframes fallIn{0%{opacity:0;transform:translateY(-24px)}100%{opacity:1;transform:translateY(0)}}
+      .fall{opacity:0;animation:fallIn .6s ease-out forwards}
+    }
+    .delay-5{animation-delay:.6s}.delay-6{animation-delay:.8s}.delay-7{animation-delay:1s}.delay-8{animation-delay:1.2s}.delay-9{animation-delay:1.3s}
+
+    .highlight{color:var(--accent);font-weight:600}
+    .highlight a:link,.highlight a:visited{color:var(--muted);text-decoration:underline}
+    .highlight a:hover{color:var(--accent)}
+
+    /* ========================
+       NAVBAR (with mobile menu)
+       ======================== */
+    .nav{position:fixed;inset:0 auto auto 0;width:100%;background:var(--accent2);z-index:50;box-shadow:0 2px 10px rgba(0,0,0,.06)}
+    .nav-inner{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.85rem clamp(1rem,2.5vw,4rem)}
+    .brand{font-weight:800;letter-spacing:.2px;color:#fff}
+    .nav-links{display:flex;gap:1.25rem;align-items:center}
+    .nav a{color:white;text-decoration:none;font-weight:700}
+    .nav a:hover{color:var(--text)}
+    .cv-button{background:var(--accent);color:#fff;padding:.55rem 1rem;border-radius:8px;font-weight:800;border:none;text-decoration:none;display:inline-block}
+    .cv-button:focus{outline:2px solid #fff;outline-offset:2px}
+
+    /* burger */
+    .burger{display:none;background:transparent;border:none;color:#fff;font-size:1.5rem}
+
+    /* collapsible panel */
+    .drawer{display:none}
+
+    @media (max-width: 860px){
+      .nav-inner{padding:.7rem 1rem}
+      .burger{display:block}
+      .nav-links{display:none}
+      .drawer{display:block;background:var(--accent2);border-top:1px solid rgba(0,0,0,.05)}
+      .drawer a{display:block;padding:.9rem 1rem;border-bottom:1px solid rgba(0,0,0,.06);color:#fff}
+      .drawer a:hover{background:rgba(0,0,0,.05)}
+      .drawer .cv-button{margin: .75rem 1rem 1rem; display:inline-block}
+      .drawer[aria-hidden="true"]{height:0;overflow:hidden}
+      .drawer[aria-hidden="false"]{height:auto}
     }
 
-    .container {
-      max-width: 1350px;
-      margin: 0 auto;
-      padding: 0 4rem;
+    /* ========================
+       HERO
+       ======================== */
+    .hero{display:grid;grid-template-columns:1.1fr .9fr;align-items:center;gap:2rem;padding:min(12vh,7rem) 0 4rem}
+    .intro{color:var(--muted);font-size:var(--step-0);margin-bottom:.5rem}
+    .big-name{font-size:var(--step-4);font-weight:900;line-height:1.05}
+    .big-sub{font-size:var(--step-2);font-weight:700;margin-top:.6rem}
+    .description{margin-top:1rem;font-size:var(--step-0);max-width:65ch}
+    .profile-pic{width:clamp(180px,35vw,400px);height:clamp(180px,35vw,400px);border-radius:50%;background-size:cover;background-position:15% 50%;border:3px solid #fff;box-shadow:0 6px 20px rgba(0,0,0,.08)}
+
+    @media (max-width: 960px){
+      .hero{grid-template-columns:1fr;gap:1.25rem;padding:7rem 0 2.25rem}
+      .hero .hero-text{order:2}
+      .hero .hero-right{order:1}
+      .big-name{font-size:clamp(2rem,7vw,3rem)}
+      .big-sub{font-size:clamp(1.05rem,3.6vw,1.6rem)}
+      .description{font-size:var(--step-0)}
+      .profile-pic{margin-inline:auto}
     }
 
-    /* =========================================================
-       CSS: ANIMATIONS
-       - fallIn: subtle drop-in
-       - fadeIn: simple opacity fade
-       ========================================================= */
-    @keyframes fallIn {
-      0% { opacity: 0; transform: translateY(-30px); }
-      100% { opacity: 1; transform: translateY(0); }
-    }
-    .fall { opacity: 0; animation: fallIn 0.7s ease-out forwards; }
+    /* ========================
+       SECTION BASE + TITLE LINE
+       ======================== */
+    section{padding:3rem 0;margin-bottom:4rem;scroll-margin-top:80px}
+    .section-title-line{display:flex;align-items:center;gap:1rem;margin-bottom:1.25rem}
+    .title-text{font-size:var(--step-2);font-weight:900;white-space:nowrap}
+    .line{flex:1;height:1px;background:#cfcfcf}
 
-    @keyframes fadeIn {
-      from { opacity: 0; } to { opacity: 1; }
-    }
-    .fade { opacity: 0; animation: fadeIn 1s ease-out forwards; }
+    /* ========================
+       SIDE ICONS → move to footer on mobile
+       ======================== */
+    .side-icons{position:fixed;bottom:0;left:1rem;display:flex;flex-direction:column;gap:1rem;z-index:40}
+    .side-icons a i{font-size:1.4rem;color:var(--text);transition:transform .25s,color .25s}
+    .side-icons a:hover i{transform:translateY(-6px);color:var(--muted)}
+    .vertical-line{width:2px;height:120px;background:var(--text);opacity:.6;margin:.5rem auto 0}
+    @media (max-width: 860px){.side-icons{position:static;flex-direction:row;justify-content:center;padding:0 .75rem;margin-top:1rem}.vertical-line{display:none}}
 
-    /* Small utility delays for staggered entrances */
-    .delay-1 { animation-delay: 0.1s; }
-    .delay-2 { animation-delay: 0.2s; }
-    .delay-3 { animation-delay: 0.3s; }
-    .delay-4 { animation-delay: 0.4s; }
-    .delay-5 { animation-delay: 0.6s; }
-    .delay-6 { animation-delay: 0.8s; }
-    .delay-7 { animation-delay: 0.9s; }
-    .delay-8 { animation-delay: 1.1s; }
-    .delay-9 { animation-delay: 1.3s; }
-  
-    /* =========================================================
-       CSS: TYPOGRAPHY HIGHLIGHTS
-       - Accent color spans and links
-       ========================================================= */
-    .highlight {
-      color: #B8563A;
-      font-weight: bold;
-    }
+    /* ========================
+       EDUCATION (unchanged on desktop, simplified on mobile)
+       ======================== */
+    .education-container{display:flex;justify-content:center;align-items:flex-start;gap:clamp(1.25rem,4vw,4rem);width:100%;max-width:1100px;margin:1rem auto 0}
+    .edu-menu{list-style:none;margin:0;padding:0;width:215px;height:168px;border-left:3px solid #ccc;display:flex;flex-direction:column;justify-content:space-around}
+    .edu-menu li{padding:.75rem 1rem .75rem 1.5rem;cursor:pointer;color:var(--text);position:relative;transition:background .25s,color .25s;display:flex;align-items:center;border-radius:0;flex-shrink:0}
+    .edu-menu li:hover{background:var(--accent2)}
+    .edu-menu li.active{background:var(--accent2);color:var(--text)}
+    .edu-indicator{display:inline-block;width:3px;height:100%;background:transparent;margin-right:10px;position:absolute;left:-3px;top:0}
+    .edu-menu li.active .edu-indicator{background:var(--accent)}
+    .edu-details{flex:1;min-width:0}
+    .edu-content{display:none}
+    .edu-content.active{display:block}
+    .edu-content h3{font-size:1.15rem;margin-bottom:.4rem}
+    .edu-years{font-size:.9rem;color:#666;margin-bottom:.6rem}
+    .edu-details ul{list-style:circle;padding-left:1.25rem}
+    .edu-content ul.dash{list-style:none;padding-left:1.2rem;margin-top:.35rem}
+    .edu-content ul.dash li{position:relative;margin:.35rem 0}
+    .edu-content ul.dash li::before{content:"-";position:absolute;left:-1.2rem;color:var(--accent);font-weight:600}
 
-    .highlight a:link,
-    .highlight a:visited {
-      color: #8A784E;
-      text-decoration: underline;
-    }
-
-    .highlight a:hover,
-    .highlight a:focus,
-    .highlight a:active {
-      color: #B8563A;
+    @media (max-width: 860px){
+      .education-container{flex-direction:column;align-items:stretch}
+      .edu-menu{width:100%;height:auto;flex-direction:row;border-left:none;border-top:3px solid #ccc;border-radius:12px;overflow:auto}
+      .edu-menu li{flex:1;justify-content:center;padding:.75rem}
+      .edu-indicator{display:none}
+      .edu-details{padding-top:.5rem}
     }
 
-    /* =========================================================
-       CSS: NAVBAR
-       - Fixed top bar with anchor links + CV button
-       ========================================================= */
-    nav {
-      background-color: #AEC8A4;
-      padding: 1rem 5%;
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      gap: 2rem;
-      flex-wrap: wrap;
-      position: fixed;
-      top: 0;
-      width: 100%;
-      z-index: 10;
-    }
-
-    nav a {
-      color: white;
-      text-decoration: none;
-      font-weight: bold;
-      transition: color 0.2s;
-    }
-
-    nav a:hover { color: #3B3B1A; }
-
-    /* =========================================================
-       CSS: HERO (intro header)
-       - Two-column layout: text + profile image
-       ========================================================= */
-    .hero {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10vh 5%;
-      background-color: #E7EFC7;
-      color: #3B3B1A;
-      flex-wrap: wrap;
-      min-height: 100vh;
-    }
-
-    .hero-text { max-width: 55%; }
-    .intro { font-size: 1.25rem; color: #8A784E; margin-bottom: 1rem; }
-    .big-name { font-size: 3.5rem; font-weight: bold; margin: 0; }
-    .big-sub { font-size: 2.2rem; font-weight: 600; margin-top: 1rem; }
-
-    .description {
-      margin-top: 1.5rem;
-      font-size: 1rem;
-      line-height: 1.6;
-      max-width: 600px;
-    }
-
-    .hero-right { flex-shrink: 0; }
-
-    .profile-pic {
-      width: 400px;
-      height: 400px;
-      border-radius: 50%;
-      background-size: cover;
-      background-position: 15% 50%;
-      border: 3px solid white;
-    }
-
-    /* Responsive adjustments for hero and nav */
-    @media (max-width: 768px) {
-      .hero { flex-direction: column; align-items: flex-start; gap: 1rem; }
-      .hero-text { max-width: 100%; }
-      nav { justify-content: center; }
-    }
-
-    /* =========================================================
-       CSS: BUTTONS (CV)
-       ========================================================= */
-    .cv-box { display: inline-block; }
-    .cv-box:hover { transform: scale(1.05); box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
-
-    .cv-button {
-      background-color: #B8563A ;
-      color: white;
-      padding: 0.6rem 1.2rem;
-      border: none;
-      border-radius: 4px;
-      text-decoration: none;
-      font-size: 1rem;
-      font-weight: bold;
-      display: inline-block;
-      transition: background-color 0.2s;
-    }
-    .cv-button:hover { background-color: #B8563A; color: white; }
-
-    /* =========================================================
-       CSS: SECTION BASE
-       - Shared padding/margins
-       - Title line with divider
-       ========================================================= */
-    section {
-      padding: 3rem 1rem;
-      margin-bottom: 5rem;
-      scroll-margin-top: 90px;
-      display: block;
-    }
-
-    section h2 { margin-bottom: 1rem; color: #3B3B1A; }
-
-    .section-title-line {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      margin-bottom: 2rem;
-    }
-    .section-title-line .title-text {
-      font-size: 1.75rem;
-      font-weight: bold;
-      white-space: nowrap;
-      color: #3B3B1A;
-    }
-    .section-title-line .line {
-      flex: 1;
-      height: 1px;
-      background-color: #ccc;
-    }
-
-    /* =========================================================
-       CSS: SIDE ICONS (social links)
-       ========================================================= */
-    .side-icons {
-      position: fixed;
-      bottom: 0;
-      left: 1rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1.2rem;
-      z-index: 999;
-    }
-
-    .side-icons a i {
-      font-size: 1.5rem;
-      color: #3B3B1A;
-      transition: color 0.3s, transform 0.3s;;
-    }
-    .side-icons a:hover i { color: #8A784E; transform: translateY(-5px); }
-
-    .vertical-line {
-      width: 2px;
-      height: 150px;
-      background-color: #3B3B1A;
-      margin: 0 auto;
-      opacity: 0.6;
-      margin-top: auto;
-      margin: 1rem auto 0 auto; /* centers the block */
-    }
-
-    /* =========================================================
-       CSS: EDUCATION (menu + details)
-       - Left vertical menu; right content panel
-       ========================================================= */
-    .education-container {
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      gap: 4rem;
-      width: 100%;
-      max-width: 1100px;
-      margin: 2rem auto 0 auto;
-    }
-
-    .edu-menu {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      width: 215px;
-      height: 168px;          /* fixed height for even spacing */
-      border-left: 3px solid #ccc; /* vertical rule */
-      display: flex;
-      flex-direction: column;
-      justify-content: space-around;
-    }
-
-    .edu-menu li {
-      padding: 0.75rem 1rem;
-      padding-left: 1.5rem;
-      cursor: pointer;
-      color: #3B3B1A;
-      position: relative;
-      transition: background-color 0.3s, color 0.3s;
-      display: flex;
-      align-items: center;
-      border-radius: 0px;
-      height: auto;
-      flex-shrink: 0;
-    }
-    .edu-menu li:hover { background-color: #AEC8A4; }
-    .edu-menu li.active { background-color: #AEC8A4; color: #3B3B1A; }
-    .edu-menu li.active .edu-indicator { background-color: #B8563A; }
-
-    .edu-indicator {
-      display: inline-block;
-      width: 3px;
-      height: 100%;
-      background-color: transparent;
-      margin-right: 10px;
-      position: absolute;
-      left: -3px;
-      top: 0;
-    }
-
-    .edu-details {
-      flex: 1;
-      min-width: 0;           /* prevent overflow issues */
-      min-height: 300px;
-    }
-
-    .edu-details ul { list-style-type: circle; padding-left: 1.5rem; }
-
-    .edu-content h3 {
-      font-size: 1.3rem;
-      color: #3B3B1A;
-      margin-bottom: 0.75rem;
-    }
-
-    .edu-content ul li { margin-bottom: 0.75rem; }
-
-    .edu-years {
-      font-size: 0.85rem;
-      color: #666;
-      margin-bottom: 1rem;
-    }
-
-    .edu-content { display: none; }
-    .edu-content.active { display: block; }
-
-    .edu-wrapper {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 0 1rem;
-    }
-
-    /* Sub-list with dash bullets inside education items */
-    .edu-content ul.dash { list-style: none; padding-left: 1.25rem; margin-top: 0.35rem; }
-    .edu-content ul.dash li { position: relative; margin: 0.35rem 0; }
-    .edu-content ul.dash li::before {
-      content: "-";
-      position: absolute;
-      left: -1.25rem;
-      color: #B8563A;
-      font-weight: 600;
-    }
-
-       /* =========================================================
-      EXPERIENCE: Vertical Alternating Timeline (v-exp)
-       - Circles alternate left/right of a central line
-       - Click → circle grows + text panel opens underneath
-       - Namespaced with .v-exp to avoid conflicts
-       ========================================================= */
-    /* ---- palette vars (add once near your other :root or top of CSS) ---- */
-    :root {
-      --accent: #B8563A;   /* primary highlight */
-      --accent2:#8A784E;   /* secondary */
-      --text:   #3B3B1A;   /* body text */
-      --card-bg:#FFFFFF;
-      --exp-img: 150px;     /* fixed circle diameter (layout box) */
-      --exp-step: 240px;
-      --exp-dot: 30px;     /* connector dot (without its border) */
-      --exp-bar: 1000px; 
-      --bar-w: 3px;   /* fixed length of the vertical bar */
-      --exp-card-shift: 120px;   /* move all boxes down by this amount */
-    }
-
-    /* ===== EXPERIENCE TIMELINE (vertical, alternating) ===== */
+    /* ========================
+       EXPERIENCE TIMELINE
+       - desktop: alternating along a center bar
+       - mobile: single column with left rail
+       ======================== */
+    :root{--exp-img: 150px;--exp-step: 240px;--exp-dot: 30px;--exp-bar: 980px;--bar-w:3px}
     .exp-wrapper{max-width:1100px;margin:0 auto;padding:0 1rem}
+    .exp-timeline{position:relative;padding:2rem 0;min-height:var(--exp-bar)}
+    .exp-timeline::before{content:"";position:absolute;left:50%;top:0;height:var(--exp-bar);width:var(--bar-w);background:var(--muted);transform:translateX(-50%);z-index:0}
 
-    /* central fixed-size vertical bar */
-    .exp-timeline{
-      position: relative;
-      padding: 2rem 0;             /* keep spacing around the bar */
-      margin: 0 auto;
-      min-height: var(--exp-bar);  /* ensures space for fixed bar */
-      overflow: visible;
-    }
-    .exp-timeline::before{
-      content: "";
-      position: absolute;
-      left: 50%;
-      top: 0;
-      height: var(--exp-bar);      /* fixed bar length */
-      width: 3px;                  /* bar thickness */
-      background: var(--accent2);
-      transform: translateX(-50%);
-      z-index: 0;
-    }
+    .exp-node{position:relative;width:50%;padding:0 2rem 2rem;min-height:var(--exp-step);cursor:pointer;background:transparent;border:none;text-align:left;font:inherit;z-index:1;display:flex;flex-direction:column}
+    .exp-node:nth-child(odd){left:0;padding-right:3rem;align-items:flex-end}
+    .exp-node:nth-child(even){left:50%;padding-left:3rem;align-items:flex-start}
 
-    /* item container (acts like a card anchor) */
-    .exp-node{
-      position:relative;
-      width:50%;
-      padding:0 2rem 2rem;
-      min-height: var(--exp-step);  /* FIXED vertical spacing per node */
-      cursor:pointer;
-      background:transparent;
-      border:none;
-      text-align:left;
-      font:inherit;
-      z-index: 1;
-      display: flex;
-      flex-direction: column;
-    }
+    .exp-dot{position:absolute;width:var(--exp-dot);height:var(--exp-dot);background:#fff;border:4px solid var(--muted);border-radius:50%;box-shadow:0 0 0 2px #fff;top:calc((var(--exp-img) - var(--exp-dot))/2);z-index:2}
+    .exp-node:nth-child(odd) .exp-dot{right:0;transform:translateX(50%)}
+    .exp-node:nth-child(even) .exp-dot{left:0;transform:translateX(-50%)}
+    .exp-node.active .exp-dot{border-color:var(--accent);background:var(--accent)}
 
-    .exp-node:nth-child(odd){   /* left side */
-      left:0;
-      padding-right:3rem;
-      text-align:left;
-      align-items: flex-end;
+    .exp-node-img{width:var(--exp-img);height:var(--exp-img);border-radius:50%;overflow:hidden;border:3px solid #fff;box-shadow:0 0 0 2px var(--muted);display:inline-flex;align-items:center;justify-content:center;background:#ddd}
+    .exp-node-img:not(.logo-circle) img{width:100%;height:100%;object-fit:cover}
+    .exp-node-img.logo-circle{background:#fff;padding:12%}
+    .exp-node-img.logo-circle img{width:100%;height:100%;object-fit:contain;transform:scale(var(--logo-scale,1))}
+
+    .exp-content{position:absolute;display:none;max-width:480px;background:#fff;border:1px solid rgba(0,0,0,.06);border-radius:14px;padding:1rem 1.1rem;box-shadow:0 10px 22px rgba(0,0,0,.06);top:11rem}
+    .exp-node.active .exp-content{display:block}
+    .exp-content h3{margin-bottom:.25rem}
+    .exp-content .edu-years{margin-bottom:.6rem;font-size:.85rem;color:var(--muted)}
+
+    /* --- MOBILE LAYOUT FOR TIMELINE --- */
+    @media (max-width: 900px){
+      .exp-timeline{padding:1rem 0 0;min-height:unset}
+      .exp-timeline::before{left:22px;transform:none;height:100%}
+      .exp-node{width:100%;left:0;padding:0 0 1.75rem 3.5rem;align-items:flex-start;min-height:unset}
+      .exp-node + .exp-node{margin-top:1.25rem}
+      .exp-node-img{--exp-img:90px;width:90px;height:90px;box-shadow:0 0 0 2px var(--muted)}
+      .exp-dot{left:22px;right:auto;transform:translate(-50%, 0);top:36px}
+      .exp-content{position:static;display:none;margin-top:.75rem;max-width:unset}
+      .exp-node.active .exp-content{display:block}
+      /* make the image and title inline */
+      .exp-node-header{display:flex;align-items:center;gap:.9rem}
+      .exp-node:nth-child(odd),.exp-node:nth-child(even){padding-left:3.5rem}
     }
 
-    .exp-node:nth-child(even){  /* right side */
-      left:50%;
-      padding-left:3rem;
-      text-align:left;
-      align-items: flex-start;
-    }
+    /* tap target: allow tapping anywhere on node (mobile) */
+    .exp-node:focus-visible{outline:2px dashed var(--accent);outline-offset:4px;border-radius:12px}
 
-    .exp-node:nth-child(odd) .exp-content h3 {
-      text-align: right;
-    }
+    /* ========================
+       ABOUT GRID
+       ======================== */
+    #about{padding-top:0}
+    #about .about-intro{text-align:center;max-width:75ch;margin:0 auto 1.2rem;color:var(--text)}
+    #about .interests-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:1.25rem;align-items:start}
+    #about .interests-grid>figure.interest-card{grid-column:span 2}
+    #about .interests-grid>figure.interest-card:nth-of-type(4){grid-column:2 / span 2}
+    #about .interests-grid>figure.interest-card:nth-of-type(5){grid-column:4 / span 2}
+    @media (max-width: 900px){#about .interests-grid{grid-template-columns:repeat(2,1fr)}#about .interests-grid>figure.interest-card{grid-column:auto}}
+    @media (max-width: 560px){#about .interests-grid{grid-template-columns:1fr}}
 
-    .exp-node:nth-child(odd) .exp-content p {
-      text-align: right;
-    }
+    .interest-card{background:var(--card);border:1px solid rgba(0,0,0,.06);border-radius:14px;padding:.75rem;box-shadow:0 8px 18px rgba(0,0,0,.05);transition:transform .18s, box-shadow .18s;text-align:center}
+    .interest-card:hover{transform:translateY(-3px);box-shadow:0 12px 24px rgba(0,0,0,.07)}
+    .interest-card img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:12px}
+    .interest-card figcaption{margin-top:.6rem;font-weight:700}
+    .interest-card p{margin-top:.25rem;font-size:var(--step--1);color:var(--muted)}
 
-
-    .exp-dot{
-      position: absolute;
-      width: var(--exp-dot);
-      height: var(--exp-dot);
-      background: #fff;
-      border: 4px solid var(--accent2);
-      border-radius: 50%;
-      box-shadow: 0 0 0 2px #fff;
-      top: calc( (var(--exp-img) - var(--exp-dot)) / 2 ); /* vertically center vs circle */
-      z-index: 2;
-      cursor: pointer;
-      outline: none;
-    }
-
-    /* Center the clickable dot on the bar */
-    .exp-node:nth-child(odd) .exp-dot{
-      right: 0;
-      transform: translateX(50%);
-    }
-    .exp-node:nth-child(even) .exp-dot{
-      left: 0;
-      transform: translateX(-50%);
-    }
-    /* active state color */
-    .exp-node.active .exp-dot{
-      border-color: var(--accent);
-      background: var(--accent);
-    }
-
-    /* Base circle frame (works for photos too) */
-    .exp-node-img{
-      width: var(--exp-img);
-      height: var(--exp-img);
-      border-radius: 50%;
-      overflow: hidden;
-      border: 3px solid #fff;
-      box-shadow: 0 0 0 2px var(--accent2);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      background: #ddd; /* fallback bg for photos */
-    }
-
-    /* Photos fill the circle */
-    .exp-node-img:not(.logo-circle) img{
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    /* LOGOS: white circular badge, logo fully contained */
-    .exp-node-img.logo-circle{
-      background: #fff;     /* white badge */
-      padding: 12%;         /* breathing room so logo doesn’t touch the edge */
-    }
-
-    .exp-node-img.logo-circle img{
-      width: 100%;
-      height: 100%;
-      object-fit: contain;          /* keep full logo */
-      transform: scale(var(--logo-scale, 1)) translate(var(--logo-tx, 0), var(--logo-ty, 0));
-      transform-origin: center;
-    }
-
-
-
-    
-    /* center the dot over the vertical bar */
-    .exp-node:nth-child(odd)::after{
-      right: 0;
-      transform: translateX(50%);
-    }
-    .exp-node:nth-child(even)::after{
-      left: 0;
-      transform: translateX(-50%);
-    }
-
-
-    .exp-content{
-      position: absolute;
-      display: none;                 /* always visible */
-      max-width: 480px;               /* card width */
-      background: #fff;
-      border: 1px solid rgba(0,0,0,.06);
-      border-radius: 14px;
-      padding: 1rem 1.1rem;
-      box-shadow: 0 10px 22px rgba(0,0,0,.06);
-      top: 11rem;
-        }
-    .exp-node.active .exp-content{ display: block; }
-    .exp-content h3{ margin-bottom:.25rem }
-    .exp-content .edu-years{ margin-bottom:.6rem; font-size:.85rem; color:var(--accent2) }
-    .exp-content ul{ padding-left:1.2rem; list-style: circle; }
-    .exp-content li{ margin:.4rem 0 }
-    .exp-label, .exp-summary, .exp-content {
-      hyphens: auto;
-    }
-
-
-       /* ===== ABOUT (centered like education/experience) ===== */
-
-      #about { padding-top: 0; }
-      #about .about-intro {
-      text-align: center;
-      max-width: 750px;
-      margin: 0 auto 2rem auto;
-      line-height: 1.6;
-      color: #3B3B1A;
-    }
-    /* Make a 6-column grid; each card spans 2 cols → consistent sizes */
-    #about .interests-grid {
-      display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      gap: 1.25rem;
-      align-items: start;
-    }
-
-    /* Every card spans 2 columns (so row 1 has three equal cards) */
-    #about .interests-grid > figure.interest-card {
-      grid-column: span 2;
-    }
-
-    /* Center row 2 by hand (cards 4 & 5) */
-    #about .interests-grid > figure.interest-card:nth-of-type(4) {
-      grid-column: 2 / span 2; /* starts at col 2 → centered left card */
-    }
-    #about .interests-grid > figure.interest-card:nth-of-type(5) {
-      grid-column: 4 / span 2; /* starts at col 4 → centered right card */
-    }
-
-    /* Mobile: let them flow naturally */
-    @media (max-width: 600px) {
-      #about .interests-grid {
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      }
-      #about .interests-grid > figure.interest-card,
-      #about .interests-grid > figure.interest-card:nth-of-type(4),
-      #about .interests-grid > figure.interest-card:nth-of-type(5) {
-        grid-column: auto;
-      }
-    }
-
-
-
-    .interest-card {
-      background: #FFFFFF;
-      border: 1px solid rgba(0,0,0,.06);
-      border-radius: 14px;
-      padding: .75rem;
-      box-shadow: 0 8px 18px rgba(0,0,0,.05);
-      transition: transform .18s ease, box-shadow .18s ease;
-      text-align: center;
-    }
-
-    .interest-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 12px 24px rgba(0,0,0,.07);
-    }
-
-    /* Image keeps a neat square shape */
-    .interest-card img {
-      width: 100%;
-      aspect-ratio: 1 / 1;
-      object-fit: cover;
-      border-radius: 12px;
-      display: block;
-    }
-
-    /* Caption */
-    .interest-card figcaption {
-      margin-top: .6rem;
-      font-weight: 600;
-      color: #3B3B1A;
-    }
-
-    /* Tiny description under caption (optional) */
-    .interest-card p {
-      margin-top: .25rem;
-      font-size: .9rem;
-      color: #8A784E;
-    }
-
-    /* Responsive tweaks if needed */
-    @media (max-width: 600px) {
-      .interests-grid { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
-    }
-
-    /* ===== Footer ===== */
-    .site-footer {
-      max-width: 1100px;
-      margin: 4rem auto 2rem;
-      padding: 0 1rem;
-      text-align: center;           /* center the line */
-      font-size: 0.95rem;
-      color: #8A784E;
-      opacity: 0.9;
-    }
-    .site-footer a { color: inherit; text-decoration: none; }
-    .site-footer a:hover { text-decoration: underline; }
-
-
-
-    /* =========================================================
-       CSS: RESPONSIVE / MOBILE TWEAKS
-       ========================================================= */
-    @media (max-width: 900px) {
-      .exp-timeline { gap: 2.25rem; }
-      .exp-node-img { width: 95px; height: 95px; }
-    }
-
-    @media (max-width: 650px) {
-      .exp-line { display: none; }
-      .exp-timeline {
-        flex-wrap: wrap;
-        gap: 1.4rem 2rem;
-        padding: 1.25rem 0.5rem;
-      }
-      .exp-node-img { width: 88px; height: 88px; }
-    }
-
-    /* mobile tweaks for big active node comfort and connector positioning */
-    @media (max-width: 650px) {
-      .exp-timeline { gap: 3rem; padding: 2.5rem .5rem; }
-      .exp-node::before { top: calc(50% + 48px); height: 18px; }
-    }
+    /* ========================
+       FOOTER
+       ======================== */
+    .site-footer{max-width:1100px;margin:2.5rem auto 2rem;padding:0 1rem;text-align:center;font-size:var(--step--1);color:var(--muted)}
+    .site-footer a{text-decoration:underline}
   </style>
 </head>
 
 <body>
-  <!-- =========================================================
-       NAVBAR
-       ========================================================= -->
-  <nav>
-    <a href="#education" class="fall delay-1">Education</a>
-    <a href="#experience" class="fall delay-2">Experience</a>
-    <a href="#about" class="fall delay-3">About me</a>
-    <div class="cv-box fall delay-4">
-      <a class="cv-button" href="img/cv.pdf" target="_blank">Resume</a>
+  <!-- ======================== NAV ======================== -->
+  <header class="nav" role="banner">
+    <div class="nav-inner">
+      <div class="brand">Luís Leitão</div>
+      <nav class="nav-links" aria-label="Primary">
+        <a href="#education">Education</a>
+        <a href="#experience">Experience</a>
+        <a href="#about">About me</a>
+        <a class="cv-button" href="img/CV-6.pdf" target="_blank" rel="noopener">Resume</a>
+      </nav>
+      <button class="burger" aria-controls="mobile-drawer" aria-expanded="false" aria-label="Open menu">
+        <i class="fa-solid fa-bars"></i>
+      </button>
     </div>
-  </nav>
+    <!-- Mobile drawer -->
+    <div id="mobile-drawer" class="drawer" aria-hidden="true">
+      <a href="#education">Education</a>
+      <a href="#experience">Experience</a>
+      <a href="#about">About me</a>
+      <a class="cv-button" href="img/CV-6.pdf" target="_blank" rel="noopener">Resume</a>
+    </div>
+  </header>
 
-  <!-- =========================================================
-       HERO SECTION
-       ========================================================= -->
-  <div class="container">
-    <div class="hero">
+  <main class="container">
+    <!-- ======================== HERO ======================== -->
+    <section class="hero" id="home">
       <div class="hero-text">
         <p class="intro fall delay-5">Hi, my name is</p>
         <h1 class="big-name fall delay-6">Luís Leitão.</h1>
-        <h2 class="big-sub fall delay-7">  I want to build data-driven models that explain complexity and support decision-making</h2>
+        <h2 class="big-sub fall delay-7">I want to build data-driven models that explain complexity and support decision-making</h2>
         <p class="description fall delay-8">
-          I'm an <span class="highlight">Engineering Physics</span> student with a deep interest in  <span class="highlight">data-driven modelling</span> and <span class ="highlight">quantitative finance</span>, I'm a big enthusiast of <span class="highlight"> financial markets</span>, from traditional investment methods to strategies for modelling stochastic market behaviour.</p>
+          I'm an <span class="highlight">Engineering Physics</span> student with a deep interest in <span class="highlight">data-driven modelling</span> and <span class="highlight">quantitative finance</span>. I'm a big enthusiast of <span class="highlight">financial markets</span>, from traditional investment methods to strategies for modelling stochastic market behaviour.
+        </p>
       </div>
       <div class="hero-right">
-        <div class="profile-pic fall delay-8" style="background-image: url('img/IMG_02792.JPG');"></div>
+        <div class="profile-pic fall delay-8" style="background-image:url('img/IMG_02792.JPG');"></div>
       </div>
-    </div>
-  </div>
-  
-  <!-- =========================================================
-       EDUCATION SECTION
-       - Left menu with items, right content panels
-       ========================================================= -->
-  <section id="education">
-    <div class="edu-wrapper">
-      <div class="section-title-line">
-        <span class="title-text">Education</span>
-        <div class="line"></div>
-      </div>
+    </section>
+
+    <!-- ======================== EDUCATION ======================== -->
+    <section id="education" aria-labelledby="education-title">
+      <div class="section-title-line"><span id="education-title" class="title-text">Education</span><div class="line"></div></div>
 
       <div class="education-container">
-        <!-- --------- Education Menu (left column) --------- -->
-        <ul class="edu-menu">
-          <li onclick="showEdu('fcul', this)" class="active"><span class="edu-indicator"></span> ULisboa</li>
-          <li onclick="showEdu('sorbonne', this)"><span class="edu-indicator"></span> Sorbonne</li>
-          <li onclick="showEdu('nova', this)"><span class="edu-indicator"></span> NOVA</li>
-          <li onclick="showEdu('schools', this)"><span class="edu-indicator"></span> Schools & Conferences</li>
+        <ul class="edu-menu" role="tablist" aria-label="Education entries">
+          <li role="tab" aria-controls="fcul" aria-selected="true" tabindex="0" onclick="showEdu('fcul', this)" class="active"><span class="edu-indicator"></span> ULisboa</li>
+          <li role="tab" aria-controls="sorbonne" aria-selected="false" tabindex="-1" onclick="showEdu('sorbonne', this)"><span class="edu-indicator"></span> Sorbonne</li>
+          <li role="tab" aria-controls="nova" aria-selected="false" tabindex="-1" onclick="showEdu('nova', this)"><span class="edu-indicator"></span> NOVA</li>
+          <li role="tab" aria-controls="schools" aria-selected="false" tabindex="-1" onclick="showEdu('schools', this)"><span class="edu-indicator"></span> Schools & Conferences</li>
         </ul>
 
-        <!-- --------- Education Details (right column) --------- -->
         <div class="edu-details">
-          <!-- ULisboa -->
-          <div class="edu-content active" id="fcul">
+          <div class="edu-content active" id="fcul" role="tabpanel">
             <h3>MSc in Engineering Physics</h3>
             <p class="edu-years">Sep 2023 – Present</p>
             <ul>
@@ -706,8 +279,7 @@
             </ul>
           </div>
 
-          <!-- Sorbonne -->
-          <div class="edu-content" id="sorbonne">
+          <div class="edu-content" id="sorbonne" role="tabpanel" hidden>
             <h3>Erasmus+ Exchange</h3>
             <p class="edu-years">Sep 2024 – Jan 2025</p>
             <ul>
@@ -719,8 +291,7 @@
             </ul>
           </div>
 
-          <!-- NOVA -->
-          <div class="edu-content" id="nova">
+          <div class="edu-content" id="nova" role="tabpanel" hidden>
             <h3>BSc in Engineering Physics</h3>
             <p class="edu-years">Sep 2019 - Aug 2022</p>
             <ul>
@@ -729,8 +300,7 @@
             </ul>
           </div>
 
-          <!-- Schools & Conferences -->
-          <div class="edu-content" id="schools">
+          <div class="edu-content" id="schools" role="tabpanel" hidden>
             <h3>Schools & Conferences</h3>
             <ul>
               <li>Hands-on neutron detection course at JSI TRIGA reactor, Ljubljana, 2023 (Course).</li>
@@ -739,251 +309,174 @@
               <li>FISICA2024: 23ª Conferência Nacional de Física, Coimbra, 2024 (Poster).</li>
               <li>CompAS: Annual meeting Computational Atomic Sctructure collaboration, Lisboa, 2024 (Organization).</li>
               <li>NICXVIII: International Symposium on Nuclei in the Cosmos, Girona, 2025 (Poster).</li>
-
             </ul>
-          </div>
-        </div> <!-- /edu-details -->
-      </div>   <!-- /education-container -->
-    </div>     <!-- /edu-wrapper -->
-  </section>
-
-  <!-- =========================================================
-       EXPERIENCE SECTION (TIMELINE)
-       - Image circles over animated line; details card below
-       ========================================================= -->
-    <section id="experience">
-      <div class="edu-wrapper">
-        <div class="section-title-line">
-          <span class="title-text">Experience</span>
-          <div class="line"></div>
-        </div>
-      
-        <div class="exp-wrapper">
-          <div class="exp-timeline" aria-label="Experience timeline (vertical)">
-          
-            <!-- Item 1 (active by default) -->
-            <button class="exp-node active" type="button" data-target="exp-fellow">
-              <span class="exp-node-img logo-circle">
-                <!-- photo or icon/monogram -->
-                <img src="img/IA_logo_bitmap-rgbblack-1200px.png" alt="Inter at IA" style="--logo-scale: 3.1;">
-              </span>
-              <span class="exp-dot" aria-label="Open details" role="button" tabindex="0"></span>
-              <div class="exp-content active" id="exp-fellow" role="region" aria-label="Research Fellow details">
-                <h3>Intership at IA</h3>
-                <p class="edu-years">Jan 2022 – Mar 2022</p>
-                <ul>
-                  <li>Research on a sample of high redshift galaxies spectra taken from the MOSDEF survey, using Python and the FADO analyses tool.</li>
-                  <li>Goal: predicting of the contribution of nebulae to the global makeup of the galaxies.</li>
-                </ul>
-              </div>
-            </button>
-          
-            <!-- Item 2 -->
-            <button class="exp-node" type="button" data-target="exp-teaching">
-              <span class="exp-node-img">
-                <!-- If no photo, you can place an icon/initials instead -->
-                <!-- <i class="fas fa-chalkboard-user" aria-hidden="true" style="font-size:28px;color:var(--text)"></i> -->
-                <img src="img/ChatGPT Image Oct 16, 2025 at 09_08_26 PM.png" alt="Teaching">
-              </span>
-              <span class="exp-dot" aria-label="Open details" role="button" tabindex="0"></span>
-              <div class="exp-content" id="exp-teaching" role="region" aria-label="Teaching details">
-                <h3>Math and Physics Tutor</h3>
-                <p class="edu-years">Jan 2020 – Sep 2024</p>
-                <ul>
-                  <li>Math and physics tutor for high school students, balancing 4 to 9 hours/week alongside academic and research commitments.</li>
-                  <li>Emphasis on intuition building, using "real-world" examples.</li>
-                </ul>
-              </div>
-            </button>
-          
-            <!-- Item 3 -->
-            <button class="exp-node" type="button" data-target="exp-intern">
-              <span class="exp-node-img logo-circle">
-                <!-- Use an icon/monogram if you lack a photo -->
-                <img src="img/LIP-black-100x68.png" alt="Research Fellow" style="--logo-scale: 3.1;">
-              </span>
-              <span class="exp-dot" aria-label="Open details" role="button" tabindex="0"></span>
-              <div class="exp-content" id="exp-intern" role="region" aria-label="Intern details">
-                <h3>Research Fellow</h3>
-                <p class="edu-years">Mar 2023 - Present</p>
-                <ul>
-                  <li>Supported by an 18-month FCT research grant, calcualted atomic parameters for heavy ions and performed collisional-radiative modelling for kilonovae nucleosynthesis.</li>
-                  <li>Supervised two bachelor’s students during a summer internship, focused on developing a database and a corresponding website for data access.</li>
-                  <li>Publication on Physical Review A: R. F. Silva, A. Fllörs, L. Leitão, <span class='highlight'><a href="https://scholar.google.com/citations?view_op=list_works&hl=pt-PT&hl=pt-PT&user=QFljiZUAAAAJ" target="_blank" rel="noopener">"Systematic Bayesian Optimization for Atomic Structure Calculations of Heavy Elements"</a></span></li>
-                </ul>
-              </div>
-            </button>
-          
           </div>
         </div>
       </div>
     </section>
 
-  
+    <!-- ======================== EXPERIENCE ======================== -->
+    <section id="experience" aria-labelledby="experience-title">
+      <div class="section-title-line"><span id="experience-title" class="title-text">Experience</span><div class="line"></div></div>
 
-  <!-- =========================================================
-       ABOUT SECTION
-       ========================================================= -->
-  <section id="about">
-    <div class="edu-wrapper">
-      <div class="section-title-line">
-        <span class="title-text">About Me</span>
-        <div class="line"></div>
+      <div class="exp-wrapper">
+        <div class="exp-timeline" aria-label="Experience timeline (vertical)">
+
+          <!-- Item 1 -->
+          <button class="exp-node active" type="button" data-target="exp-fellow" aria-expanded="true">
+            <div class="exp-node-header">
+              <span class="exp-node-img logo-circle">
+                <img src="img/IA_logo_bitmap-rgbblack-1200px.png" alt="Intern at IA" style="--logo-scale:3.1">
+              </span>
+              <span class="exp-dot" aria-hidden="true"></span>
+            </div>
+            <div class="exp-content active" id="exp-fellow" role="region" aria-label="Internship at IA details">
+              <h3>Intership at IA</h3>
+              <p class="edu-years">Jan 2022 – Mar 2022</p>
+              <ul>
+                <li>Research on a sample of high redshift galaxies spectra taken from the MOSDEF survey, using Python and the FADO analyses tool.</li>
+                <li>Goal: predicting of the contribution of nebulae to the global makeup of the galaxies.</li>
+              </ul>
+            </div>
+          </button>
+
+          <!-- Item 2 -->
+          <button class="exp-node" type="button" data-target="exp-teaching" aria-expanded="false">
+            <div class="exp-node-header">
+              <span class="exp-node-img">
+                <img src="img/ChatGPT Image Oct 16, 2025 at 09_08_26 PM.png" alt="Teaching">
+              </span>
+              <span class="exp-dot" aria-hidden="true"></span>
+            </div>
+            <div class="exp-content" id="exp-teaching" role="region" aria-label="Teaching details">
+              <h3>Math and Physics Tutor</h3>
+              <p class="edu-years">Jan 2020 – Sep 2024</p>
+              <ul>
+                <li>Math and physics tutor for high school students, balancing 4 to 9 hours/week alongside academic and research commitments.</li>
+                <li>Emphasis on intuition building, using "real-world" examples.</li>
+              </ul>
+            </div>
+          </button>
+
+          <!-- Item 3 -->
+          <button class="exp-node" type="button" data-target="exp-intern" aria-expanded="false">
+            <div class="exp-node-header">
+              <span class="exp-node-img logo-circle">
+                <img src="img/LIP-black-100x68.png" alt="Research Fellow" style="--logo-scale:3.1">
+              </span>
+              <span class="exp-dot" aria-hidden="true"></span>
+            </div>
+            <div class="exp-content" id="exp-intern" role="region" aria-label="Research fellow details">
+              <h3>Research Fellow</h3>
+              <p class="edu-years">Mar 2023 - Present</p>
+              <ul>
+                <li>Supported by an 18-month FCT research grant, calcualted atomic parameters for heavy ions and performed collisional-radiative modelling for kilonovae nucleosynthesis.</li>
+                <li>Supervised two bachelor’s students during a summer internship, focused on developing a database and a corresponding website for data access.</li>
+                <li>Publication on Physical Review A: R. F. Silva, A. Fllörs, L. Leitão, <span class='highlight'><a href="https://scholar.google.com/citations?view_op=list_works&hl=pt-PT&hl=pt-PT&user=QFljiZUAAAAJ" target="_blank" rel="noopener">"Systematic Bayesian Optimization for Atomic Structure Calculations of Heavy Elements"</a></span></li>
+              </ul>
+            </div>
+          </button>
+
+        </div>
       </div>
-    
-      <p class="about-intro">
-        Off the clock, you can probably find me:
-      </p>
-    
+    </section>
+
+    <!-- ======================== ABOUT ======================== -->
+    <section id="about" aria-labelledby="about-title">
+      <div class="section-title-line"><span id="about-title" class="title-text">About Me</span><div class="line"></div></div>
+
+      <p class="about-intro">Off the clock, you can find me:</p>
+
       <div class="interests-grid">
-        <!-- Row 1: 3 cards -->
         <figure class="interest-card">
-          <a href="https://www.strava.com/athletes/108867799" target="_blank" rel="noopener">
-            <img src="img/run.jpg" alt="oi" loading="lazy">
-          </a>
+          <a href="https://www.strava.com/athletes/108867799" target="_blank" rel="noopener"><img src="img/run.JPG" alt="Running" loading="lazy"></a>
           <figcaption>Doing sports</figcaption>
-          <p>I love pushing my limits, and that includes the physical side: I run, cycle, go to the gym and swim weekly. I’ve finished a half marathon and I’m training for my first marathon next year. I'm always down for a sauna followed by a cold shower.</p>
+          <p>I love pushing my limits... I’m training for my first marathon next year. I'm always down for a sauna followed by a cold shower.</p>
         </figure>
-
         <figure class="interest-card">
-          <a href="https://www.goodreads.com/user/show/178397929-lu-s-leitao" target="_blank" rel="noopener">
-            <img src="img/IMG_2912.JPG" alt="" loading="lazy">
-          </a>
+          <a href="https://www.goodreads.com/user/show/178397929-lu-s-leitao" target="_blank" rel="noopener"><img src="img/IMG_2912.JPG" alt="Reading" loading="lazy"></a>
           <figcaption>Reading, Investing, Music</figcaption>
-          <p>I forced myself to read, and I ended up loving it. I forced myself to learn about the stock market and I ended up realizing I actually enjoy reading financial reports, comparing companies and following macroeconomics. I love listening to music! But I didn't force myself to do so, I'm pretty confident that my Spotify listening hours can beat yours! I love to find new bands and explore new genres. </p>
+          <p>I ended up loving books and finance. Also, I’m always exploring new music and genres.</p>
         </figure>
-
         <figure class="interest-card">
-          <img src="img/IMG_2861.PNG" alt="" loading="lazy">
+          <img src="img/IMG_2861.PNG" alt="Ocean" loading="lazy">
           <figcaption>In the ocean</figcaption>
-          <p>I'm Portuguese and so, adventure and love of the sea are in my gills. I have an Open Water diving course, I like to surf occasionally with friends and I've recently started spearfishing (with a total of 0 catches so far).</p>
+          <p>Portuguese gills: diving (OWD), occasional surfing, and new to spearfishing (0 catches so far).</p>
         </figure>
-
-
         <figure class="interest-card">
-          <img src="img/IMG_2914.JPG" alt="" loading="lazy">
+          <img src="img/IMG_2914.JPG" alt="Scouts" loading="lazy">
           <figcaption>Scout for 11 years</figcaption>
-          <p>As a scout I started working in teams from an early age. Later, as a team leader, I learned how to handle conflicts and motivate my team (especially with my own mistakes). I’ve also participated in multiple volunteer initiatives, the tree-planting actions were my favourites.</p>
+          <p>Teamwork from early on; later learned leadership (and from mistakes). Love volunteering; tree-planting wins.</p>
         </figure>
-
         <figure class="interest-card">
-          <img src="img/IMG_2911.JPG" alt="" loading="lazy">
+          <img src="img/IMG_2911.JPG" alt="Travelling" loading="lazy">
           <figcaption>Travelling</figcaption>
-          <p>I'm not a tourist, but a traveller. I chase that childlike feeling of seeing the world for the first time, immersing in new cultures. In 2022 I took a gap year, travelling across Guinea-Bissau with a tent, often staying with people who welcomed me along the way. I also volunteered at a school in Bissau, teaching Portuguese, math and helping with administrative work. In 2024, to minimize my footprint, <span class='highlight'><a href="https://ciencias.ulisboa.pt/pt/noticia/28-05-2025/luis-leitao-uma-odisseia-erasmus-ate-franca-a-bordo-de-uma-btt" target="_blank" rel="noopener">I cycled from Lisbon to Paris for my Erasmus exchange</a></span></p>
+          <p>Not a tourist—traveller. Gap year through Guinea‑Bissau with a tent, volunteering at a school. In 2024 I <span class='highlight'><a href="https://ciencias.ulisboa.pt/pt/noticia/28-05-2025/luis-leitao-uma-odisseia-erasmus-ate-franca-a-bordo-de-uma-btt" target="_blank" rel="noopener">cycled Lisbon→Paris</a></span> for Erasmus.</p>
         </figure>
       </div>
-    </div>
-  </section>
+    </section>
+  </main>
 
-
-  <!-- =========================================================
-       SIDE ICONS (fixed)
-       ========================================================= -->
-  <div class="side-icons fade delay-9">
-    <a href="https://www.linkedin.com/in/luishleitao/" target="_blank"><i class="fab fa-linkedin"></i></a>
-    <a href="https://github.com/luishleitao" target="_blank"><i class="fab fa-github"></i></a>
-    <a href="https://www.instagram.com/luis_leitao_/" target="_blank"><i class="fab fa-instagram"></i></a>
-    <a href="mailto:luish.leitao@gmail.com">
-      <i class="fas fa-envelope" style="font-size: 1.3rem;"></i>
-    </a>
-    <div class="vertical-line"></div> 
+  <!-- ======================== SIDE ICONS / FOOTER ======================== -->
+  <div class="side-icons" aria-label="Social links">
+    <a href="https://www.linkedin.com/in/luishleitao/" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+    <a href="https://github.com/luishleitao" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
+    <a href="https://www.instagram.com/luis_leitao_/" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+    <a href="mailto:luish.leitao@gmail.com" aria-label="Email"><i class="fas fa-envelope" style="font-size:1.3rem"></i></a>
+    <div class="vertical-line" aria-hidden="true"></div>
   </div>
 
   <footer class="site-footer">
     <span>&copy; <span id="year"></span> Luís Leitão — props to my friend ChatGPT</span>
   </footer>
-</body>
 
-<!-- =========================================================
-     SCRIPTS
-     - Education tab switching
-     - (Legacy) Experience menu switcher (unused by timeline)
-     - Experience timeline node interactions
-     ========================================================= -->
-<script>
-  /* -----------------------------------------
-     EDUCATION: menu item click → show panel
-     ----------------------------------------- */
-  function showEdu(id, el) {
-    const section = document.querySelector('#education');
+  <!-- ======================== SCRIPTS ======================== -->
+  <script>
+    // Year
+    document.getElementById('year').textContent = new Date().getFullYear();
 
-    // Hide only Education panels
-    section.querySelectorAll('.edu-content').forEach(e => {
-      e.style.display = 'none';
-      e.classList.remove('active');
+    // Mobile drawer toggle
+    const burger = document.querySelector('.burger');
+    const drawer = document.getElementById('mobile-drawer');
+    burger?.addEventListener('click', () => {
+      const expanded = burger.getAttribute('aria-expanded') === 'true';
+      burger.setAttribute('aria-expanded', String(!expanded));
+      drawer.setAttribute('aria-hidden', String(expanded));
+      burger.innerHTML = expanded ? '<i class="fa-solid fa-bars"></i>' : '<i class="fa-solid fa-xmark"></i>';
     });
 
-    // Show selected panel
-    const selected = section.querySelector('#' + id);
-    if (selected) {
-      selected.style.display = 'block';
-      selected.classList.add('active');
+    // EDUCATION tabs
+    function showEdu(id, el) {
+      const section = document.querySelector('#education');
+      section.querySelectorAll('.edu-content').forEach(e => { e.style.display = 'none'; e.classList.remove('active'); e.hidden = true; });
+      const selected = section.querySelector('#' + id);
+      if (selected) { selected.style.display = 'block'; selected.classList.add('active'); selected.hidden = false; }
+      section.querySelectorAll('.edu-menu li').forEach(item => { item.classList.remove('active'); item.setAttribute('aria-selected','false'); item.tabIndex = -1; });
+      el.classList.add('active'); el.setAttribute('aria-selected','true'); el.tabIndex = 0; el.focus();
     }
+    window.showEdu = showEdu; // expose for inline onclick
 
-    // Update only Education menu items
-    section.querySelectorAll('.edu-menu li').forEach(item => item.classList.remove('active'));
-    el.classList.add('active');
-  }
-
-  /* -----------------------------------------
-     EXPERIENCE: legacy list switcher (not used
-     with the new circle timeline; kept for
-     completeness in case you re-enable it)
-     ----------------------------------------- */
-  function showExp(id, el) {
-    const section = document.querySelector('#experience');
-
-    // Hide only Experience panels
-    section.querySelectorAll('.edu-content').forEach(e => {
-      e.style.display = 'none';
-      e.classList.remove('active');
-    });
-
-    // Show selected panel
-    const selected = section.querySelector('#' + id);
-    if (selected) {
-      selected.style.display = 'block';
-      selected.classList.add('active');
-    }
-
-    // Update only Experience menu items
-    section.querySelectorAll('.edu-menu li').forEach(item => item.classList.remove('active'));
-    el.classList.add('active');
-  }
-
-  /* -----------------------------------------
-     EXPERIENCE TIMELINE:
-     - Clicking a circle activates it
-     ----------------------------------------- */
-  (function(){
-    const timeline = document.querySelector('#experience .exp-timeline');
-    if (!timeline) return;
-
-    function activate(node){
-      timeline.querySelectorAll('.exp-node').forEach(n => n.classList.remove('active'));
-      node.classList.add('active');
-    }
-
-    // mouse / touch clicks on the dot only
-    timeline.addEventListener('click', (e) => {
-      const dot = e.target.closest('.exp-dot');
-      if (!dot) return;
-      const node = dot.closest('.exp-node');
-      if (node) activate(node);
-    });
-
-    // keyboard on the dot only
-    timeline.addEventListener('keydown', (e) => {
-      const dot = e.target.closest('.exp-dot');
-      if (!dot) return;
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        const node = dot.closest('.exp-node');
-        if (node) activate(node);
+    // EXPERIENCE interactions
+    (function(){
+      const timeline = document.querySelector('#experience .exp-timeline');
+      if (!timeline) return;
+      function activate(node){
+        timeline.querySelectorAll('.exp-node').forEach(n => { n.classList.remove('active'); n.setAttribute('aria-expanded','false'); });
+        node.classList.add('active');
+        node.setAttribute('aria-expanded','true');
       }
-    });
-  })();
-
-  document.getElementById('year').textContent = new Date().getFullYear();   
-</script>
+      // click/tap on node or dot
+      timeline.addEventListener('click', (e) => {
+        const node = e.target.closest('.exp-node');
+        if (node) activate(node);
+      });
+      // keyboard
+      timeline.addEventListener('keydown', (e) => {
+        const node = e.target.closest('.exp-node');
+        if (!node) return;
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); activate(node); }
+      });
+    })();
+  </script>
+</body>
 </html>
