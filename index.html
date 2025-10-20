@@ -843,20 +843,12 @@
     }
 
     /* =========================================================
-       EXPERIENCE (MOBILE)
-       - Horizontal line across the top
-       - Circles BELOW that line, in a row
-       - Details panel UNDER the row (so text is below circles)
-       - Better image sizing inside circles
+       EXPERIENCE — MOBILE: horizontal rail with dots, text below
+       (desktop remains exactly as-is)
        ========================================================= */
     @media (max-width: 900px){
-      /* Layout: title, then row of circles on a horizontal line, then details below */
-      #experience .edu-wrapper{
-        display: block;
-        position: relative;
-      }
 
-      /* Make the timeline a horizontal row */
+      /* Timeline becomes a horizontal row with a line across */
       #experience .exp-wrapper{ margin-bottom: .8rem; }
       #experience .exp-timeline{
         position: relative;
@@ -864,110 +856,88 @@
         gap: 1rem;
         justify-content: space-between;
         align-items: flex-start;
-        padding: 26px 0 0;             /* room for the line above the circles */
-        overflow-x: auto;               /* scrollable if more circles */
+        padding-top: 28px;                /* space for the rail above the dots */
+        min-height: unset;                /* no fixed vertical bar height on mobile */
       }
-
-      /* Turn the vertical bar into a horizontal line at the top */
       #experience .exp-timeline::before{
         content: "";
         position: absolute;
         left: 0; right: 0;
-        top: 10px;                      /* line position */
+        top: 14px;                        /* rail Y-position */
         height: 3px;
         background: var(--accent2, #8A784E);
         transform: none;
       }
 
-      /* Each node stacks: circle then (nothing inline — cards hidden on mobile) */
+      /* Each experience node: just a dot centered on the rail */
       #experience .exp-node{
         position: relative;
+        left: 0;                          /* cancel alternating offsets */
         width: auto;
-        min-width: 92px;                /* keeps a nice touch size */
-        padding: 0 .25rem .5rem;
+        min-width: 56px;                  /* tappable width */
+        padding: 0 .25rem .25rem;
         display: flex;
         flex-direction: column;
         align-items: center;
-        left: 0;                        /* kill alternating offsets */
       }
       #experience .exp-node:nth-child(odd),
       #experience .exp-node:nth-child(even){
         padding-left: 0; padding-right: 0; align-items: center;
       }
 
-      /* Hide the small “dot” (not needed with the horizontal rail) */
-      #experience .exp-dot{ display: none !important; }
-
-      /* Circles sit BELOW the line (thanks to top padding above) */
-      #experience .exp-node-img{
-        --exp-img: 78px;
-        width: var(--exp-img);
-        height: var(--exp-img);
-        border-radius: 50%;
-        overflow: hidden;
-        border: 3px solid #fff;
-        box-shadow: 0 0 0 2px var(--accent2, #8A784E);
-        margin-top: 8px;               /* visual gap under the line */
+      /* Keep the DOTS and make them sit on the rail */
+      #experience .exp-dot{
+        position: absolute;
+        top: 14px;                        /* same as rail top */
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 24px; height: 24px;
+        border-width: 4px;
+        cursor: pointer;
       }
 
-      /* Image sizing inside circle: logos contain; photos cover */
-      #experience .exp-node-img.logo-circle{
-        padding: 10%;
-        background: #fff;
-      }
-      #experience .exp-node-img.logo-circle img{
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-        transform: none !important;    /* ignore inline --logo-scale on mobile */
-      }
-      #experience .exp-node-img:not(.logo-circle) img{
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
-
-      /* Hide inline desktop cards; we use the separate panel below */
+      /* Hide the inline desktop cards and the big images on mobile */
       #experience .exp-content{ display: none !important; }
+      #experience .exp-node-img{ display: none !important; }
 
-      /* Details panel appears BELOW the circles row (text under circles) */
+      /* The details panel lives BELOW the rail (so text is below dots) */
       #experience #exp-panel{
         position: static;
         display: block;
-        margin-top: .6rem;
+        margin-top: .8rem;
         background: #fff;
         border: 1px solid rgba(0,0,0,.06);
         border-radius: 14px;
         box-shadow: 0 6px 16px rgba(0,0,0,.06);
         padding: 1rem 1rem 1.1rem;
-        padding-top: 2.25rem;          /* room for the X so it never covers text */
-      }
-      #experience .exp-panel-close{
-        position: absolute;
-        top: .5rem; right: .5rem;
-        z-index: 1;
+        padding-top: 2.25rem;             /* room so the X never sits on text */
       }
 
-      /* Make sure nothing from Experience bleeds into About */
+      /* Hide the close X on mobile (you open a new one by tapping another dot) */
+      #experience .exp-panel-close{ display: none !important; }
+
+      /* Safety: prevent anything from bleeding into About */
       #experience .edu-wrapper{ overflow: hidden; }
     }
 
-
-    /* === ABOUT: one card per row on mobile/tablet === */
-    @media (max-width: 900px){
-      #about .interests-grid{
-        display: grid;
-        grid-template-columns: 1fr !important;   /* single column */
-        gap: 1rem;
-      }
-      #about .interests-grid > figure.interest-card{
-        grid-column: 1 / -1 !important;          /* each card spans full row */
-      }
-      /* tidy spacing inside each card if needed */
-      #about .interest-card img{ width: 100%; height: auto; aspect-ratio: auto; }
+    /* === ABOUT: make all images the same size === */
+    #about .interest-card img{
+      width: 100%;
+      height: clamp(180px, 26vw, 260px); /* uniform height, responsive */
+      object-fit: cover;                 /* fill the box, crop overflow */
+      aspect-ratio: unset !important;    /* override any previous 1:1 rule */
+      display: block;
     }
-      </style>
-    </head>
+
+    /* Optional: keep the same image size on very small phones */
+    @media (max-width: 420px){
+      #about .interest-card img{
+        height: 200px;
+      }
+    }
+
+  </style>
+</head>
 
 <body>
   <!-- =========================================================
@@ -1095,7 +1065,7 @@
           <div class="line"></div>
         </div>
 
-        <div id="exp-panel" class="exp-panel" aria-hidden="true" role="dialog" aria-label="Experience details">
+        <div id="exp-panel" class="exp-panel" aria-hidden="false" role="region" aria-label="Experience details">
           <button class="exp-panel-close" aria-label="Close details" title="Close">
             <i class="fa-solid fa-xmark"></i>
           </button>
@@ -1354,74 +1324,57 @@
       }
     });
   })();
-  (function(){
-    const section = document.getElementById('experience');
+(function(){
+    const section  = document.getElementById('experience');
     if (!section) return;
 
-    const panel = section.querySelector('#exp-panel');
-    const panelBody = panel?.querySelector('.exp-panel-body');
-    const closeBtn = panel?.querySelector('.exp-panel-close');
     const timeline = section.querySelector('.exp-timeline');
+    const panel    = section.querySelector('#exp-panel');
+    const panelBody= panel ? panel.querySelector('.exp-panel-body') : null;
 
-    function isMobile(){ return window.matchMedia('(max-width: 900px)').matches; }
+    if (!timeline || !panel || !panelBody) return;
 
-    function showPanelFromNode(node){
-      if (!panel || !panelBody) return;
+    const isMobile = () => window.matchMedia('(max-width: 900px)').matches;
+
+    function renderFromNode(node){
       const content = node.querySelector('.exp-content');
       if (!content) return;
-      panelBody.innerHTML = content.innerHTML; // reuse your existing content
-      panel.setAttribute('aria-hidden','false');
-      panel.classList.add('open');
-      // mark active (keeps your existing active styling)
+      // highlight active (dot turns orange via your CSS)
       timeline.querySelectorAll('.exp-node').forEach(n => n.classList.remove('active'));
       node.classList.add('active');
+      // put details below the rail (no toggle/close)
+      panelBody.innerHTML = content.innerHTML;
     }
 
-    function hidePanel(){
-      if (!panel) return;
-      panel.classList.remove('open');
-      panel.setAttribute('aria-hidden','true');
-    }
-
-    // Toggle via node/dot click
-    timeline?.addEventListener('click', (e) => {
-      const node = e.target.closest('.exp-node');
-      if (!node || !isMobile()) return;
-
-      // If clicking the already-active node while panel open → close
-      const isActive = node.classList.contains('active');
-      const isOpen = panel.classList.contains('open');
-      if (isActive && isOpen){
-        hidePanel();
-        return;
-      }
-      showPanelFromNode(node);
+    // Click **only the dots** on mobile
+    timeline.addEventListener('click', (e) => {
+      if (!isMobile()) return;              // desktop keeps original behavior
+      const dot  = e.target.closest('.exp-dot');
+      if (!dot) return;
+      const node = dot.closest('.exp-node');
+      if (node) renderFromNode(node);
     });
 
-    // Keyboard support
-    timeline?.addEventListener('keydown', (e) => {
+    // Keyboard (Enter/Space) on the dot
+    timeline.addEventListener('keydown', (e) => {
       if (!isMobile()) return;
-      const node = e.target.closest('.exp-node');
-      if (!node) return;
-      if (e.key === 'Enter' || e.key === ' '){
+      const dot  = e.target.closest('.exp-dot');
+      if (!dot) return;
+      if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
-        showPanelFromNode(node);
+        const node = dot.closest('.exp-node');
+        if (node) renderFromNode(node);
       }
     });
 
-    // Close button
-    closeBtn?.addEventListener('click', hidePanel);
-
-    // ESC to close
-    window.addEventListener('keydown', (e) => {
+    // Show something by default on mobile
+    function ensureDefault(){
       if (!isMobile()) return;
-      if (e.key === 'Escape') hidePanel();
-    });
-
-    // If resizing up to desktop, ensure panel is hidden
-    window.addEventListener('resize', () => {
-      if (!isMobile()) hidePanel();
-    });
+      const active = timeline.querySelector('.exp-node.active') || timeline.querySelector('.exp-node');
+      if (active) renderFromNode(active);
+    }
+    ensureDefault();
+    window.addEventListener('resize', ensureDefault);
   })();
 </script>
 </html>
