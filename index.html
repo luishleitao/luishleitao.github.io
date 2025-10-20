@@ -842,87 +842,116 @@
       .edu-details { padding-top: 0.5rem; }
     }
 
-    /* =========================================
-       EXPERIENCE (MOBILE) — keep 3 circles left,
-       panel on the right, fix X + line length
-       ========================================= */
+    /* =========================================================
+       EXPERIENCE (MOBILE)
+       - Horizontal line across the top
+       - Circles BELOW that line, in a row
+       - Details panel UNDER the row (so text is below circles)
+       - Better image sizing inside circles
+       ========================================================= */
     @media (max-width: 900px){
-      /* Ensure the Experience area is a 2-column grid (left rail + right panel) */
+      /* Layout: title, then row of circles on a horizontal line, then details below */
       #experience .edu-wrapper{
-        display: grid;
-        grid-template-columns: 120px 1fr; /* left rail width + flexible panel */
-        column-gap: 14px;
-        align-items: stretch;              /* both columns same row height */
+        display: block;
         position: relative;
-        overflow: hidden;                   /* hard stop so nothing bleeds into About */
       }
   
-      /* Title spans both columns (leave your existing styles intact) */
-      #experience .section-title-line{ grid-column: 1 / -1; }
-  
-      /* Left column (timeline) fills the row height */
-      #experience .exp-wrapper{ grid-column: 1; }
+      /* Make the timeline a horizontal row */
+      #experience .exp-wrapper{ margin-bottom: .8rem; }
       #experience .exp-timeline{
-        padding: .25rem 0 .5rem;
-        min-height: unset;   /* no fixed heights on mobile */
-        height: 100%;        /* match panel height so the bar ends correctly */
+        position: relative;
+        display: flex;
+        gap: 1rem;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding: 26px 0 0;             /* room for the line above the circles */
+        overflow-x: auto;               /* scrollable if more circles */
       }
+  
+      /* Turn the vertical bar into a horizontal line at the top */
       #experience .exp-timeline::before{
-        left: 24px;          /* keep your rail position */
-        top: 0;
-        bottom: 0;           /* bar ends at the bottom of the timeline column */
-        height: 100%;        /* guarantees no bleed into About */
-        width: 3px;
+        content: "";
+        position: absolute;
+        left: 0; right: 0;
+        top: 10px;                      /* line position */
+        height: 3px;
         background: var(--accent2, #8A784E);
         transform: none;
       }
   
-      /* Nodes still aligned to the left rail */
+      /* Each node stacks: circle then (nothing inline — cards hidden on mobile) */
       #experience .exp-node{
-        width: 100%;
-        left: 0;
-        padding: 0 0 1rem 3.75rem; /* space for the circle */
-        min-height: unset;
-        align-items: flex-start;
+        position: relative;
+        width: auto;
+        min-width: 92px;                /* keeps a nice touch size */
+        padding: 0 .25rem .5rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        left: 0;                        /* kill alternating offsets */
       }
-      #experience .exp-node + .exp-node{ margin-top: .6rem; }
-      #experience .exp-node-img{
-        --exp-img: 80px;
-        width: 80px; height: 80px;
-        box-shadow: 0 0 0 2px var(--accent2, #8A784E);
-      }
-      #experience .exp-dot{
-        left: 24px; right: auto;
-        top: 28px;
-        width: 26px; height: 26px;
-        transform: translate(-50%, 0);
+      #experience .exp-node:nth-child(odd),
+      #experience .exp-node:nth-child(even){
+        padding-left: 0; padding-right: 0; align-items: center;
       }
   
-      /* Hide the inline desktop cards so text isn't on top of images */
+      /* Hide the small “dot” (not needed with the horizontal rail) */
+      #experience .exp-dot{ display: none !important; }
+  
+      /* Circles sit BELOW the line (thanks to top padding above) */
+      #experience .exp-node-img{
+        --exp-img: 78px;
+        width: var(--exp-img);
+        height: var(--exp-img);
+        border-radius: 50%;
+        overflow: hidden;
+        border: 3px solid #fff;
+        box-shadow: 0 0 0 2px var(--accent2, #8A784E);
+        margin-top: 8px;               /* visual gap under the line */
+      }
+  
+      /* Image sizing inside circle: logos contain; photos cover */
+      #experience .exp-node-img.logo-circle{
+        padding: 10%;
+        background: #fff;
+      }
+      #experience .exp-node-img.logo-circle img{
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        transform: none !important;    /* ignore inline --logo-scale on mobile */
+      }
+      #experience .exp-node-img:not(.logo-circle) img{
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+  
+      /* Hide inline desktop cards; we use the separate panel below */
       #experience .exp-content{ display: none !important; }
   
-      /* Right column = details panel (STATIC column, not overlay) */
+      /* Details panel appears BELOW the circles row (text under circles) */
       #experience #exp-panel{
-        grid-column: 2;
-        position: relative;
+        position: static;
         display: block;
+        margin-top: .6rem;
         background: #fff;
         border: 1px solid rgba(0,0,0,.06);
         border-radius: 14px;
         box-shadow: 0 6px 16px rgba(0,0,0,.06);
         padding: 1rem 1rem 1.1rem;
-        /* Give the close button its own space so it never sits on top of text */
-        padding-top: 2.25rem;  /* <-- key line: moves text down under the X */
+        padding-top: 2.25rem;          /* room for the X so it never covers text */
       }
-  
-      /* Close button pinned in the panel’s corner, away from the text */
       #experience .exp-panel-close{
         position: absolute;
-        top: .5rem;
-        right: .5rem;
+        top: .5rem; right: .5rem;
         z-index: 1;
       }
+  
+      /* Make sure nothing from Experience bleeds into About */
+      #experience .edu-wrapper{ overflow: hidden; }
     }
+
 
 
   </style>
