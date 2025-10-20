@@ -954,6 +954,29 @@
       }
     }
 
+    /* ===== Experience: keep close button off the text ===== */
+    #experience .exp-panel {
+      position: relative;
+      padding-top: 2.25rem;   /* room for the X so it doesn't overlap text */
+    }
+    #experience .exp-panel-close {
+      position: absolute;
+      top: .5rem;
+      right: .5rem;
+      z-index: 1;
+    }
+    
+    /* ===== Experience: bar matches content height on desktop ===== */
+    @media (min-width: 901px){
+      #experience .exp-timeline {
+        min-height: unset;   /* rely on content height */
+      }
+      #experience .exp-timeline::before {
+        height: 100%;        /* bar stops at the end of the timeline */
+      }
+    }
+
+
   </style>
 </head>
 
