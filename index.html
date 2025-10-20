@@ -1089,7 +1089,7 @@
           </button>
           <div class="exp-panel-body"></div>
         </div>
-        
+
         <div class="exp-wrapper">
           <div class="exp-timeline" aria-label="Experience timeline (vertical)">
           
@@ -1410,83 +1410,6 @@
     window.addEventListener('resize', () => {
       if (!isMobile()) hidePanel();
     });
-  })();
-</script>
-<script>
-  (function(){
-    const section   = document.getElementById('experience');
-    if (!section) return;
-
-    const panel     = section.querySelector('#exp-panel');
-    const panelBody = panel ? panel.querySelector('.exp-panel-body') : null;
-    const closeBtn  = panel ? panel.querySelector('.exp-panel-close') : null;
-    const timeline  = section.querySelector('.exp-timeline');
-
-    // If the exp-panel HTML wasn't inserted, bail gracefully
-    if (!panel || !panelBody || !timeline) return;
-
-    // Mobile test (<=900px)
-    const isMobile = () => window.matchMedia('(max-width: 900px)').matches;
-
-    function showPanelFromNode(node){
-      // Find the node's existing hidden card and reuse its HTML
-      const content = node.querySelector('.exp-content');
-      if (!content) return;
-
-      // Populate and show the panel
-      panelBody.innerHTML = content.innerHTML;
-      panel.classList.add('open');
-      panel.setAttribute('aria-hidden','false');
-
-      // Mark active node for styling/semantics
-      timeline.querySelectorAll('.exp-node').forEach(n => n.classList.remove('active'));
-      node.classList.add('active');
-
-      // Scroll the panel into view (top of experience)
-      if (typeof panel.scrollIntoView === 'function') {
-        panel.scrollIntoView({ block: 'nearest' });
-      }
-    }
-
-    function hidePanel(){
-      panel.classList.remove('open');
-      panel.setAttribute('aria-hidden','true');
-    }
-
-    // Click/tap anywhere on a node (dot, image, or button area)
-    timeline.addEventListener('click', (e) => {
-      if (!isMobile()) return;
-
-      // Prefer the .exp-node if present; otherwise find via parents
-      const node = e.target.closest('.exp-node');
-      if (!node) return;
-
-      // If tapping the already-active node while the panel is open → close it (toggle)
-      const alreadyActive = node.classList.contains('active');
-      const open = panel.classList.contains('open');
-      if (alreadyActive && open) {
-        hidePanel();
-        return;
-      }
-
-      showPanelFromNode(node);
-    });
-
-    // Keyboard (Enter/Space) on focused node/dot/image
-    timeline.addEventListener('keydown', (e) => {
-      if (!isMobile()) return;
-      const node = e.target.closest('.exp-node');
-      if (!node) return;
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        showPanelFromNode(node);
-      }
-    });
-
-    // Close buttons/esc/resize
-    closeBtn.addEventListener('click', hidePanel);
-    window.addEventListener('keydown', (e) => { if (isMobile() && e.key === 'Escape') hidePanel(); });
-    window.addEventListener('resize', () => { if (!isMobile()) hidePanel(); });
   })();
 </script>
 </html>
