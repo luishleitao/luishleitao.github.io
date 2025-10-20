@@ -963,7 +963,7 @@
       #experience .edu-wrapper{
         display: grid;
         grid-template-columns: 1fr;
-        row-gap: 12px;
+        row-gap: 0px;
       }
 
       /* Title line stays first */
@@ -1030,6 +1030,30 @@
     @media (max-width: 900px){
       #experience .exp-dot{ display:none !important; }
     }
+
+    /* MOBILE — kill the old orange dot completely */
+    @media (max-width: 900px){
+      #experience .exp-dot{
+        display: none !important;
+        width: 0 !important;
+        height: 0 !important;
+        border: 0 !important;
+        box-shadow: none !important;
+        background: transparent !important;
+      }
+    }
+
+    /* Also remove any tap/keyboard highlight that could look like a tiny square */
+    #experience .exp-node,
+    #experience .exp-node *{
+      outline: none !important;
+    }
+    #experience .exp-node{
+      -webkit-tap-highlight-color: transparent;
+      background: transparent;
+      border: none;
+    }
+
 
 
 
