@@ -1054,6 +1054,31 @@
       border: none;
     }
 
+    /* MOBILE — make the text hug the circles */
+    @media (max-width: 900px){
+      /* Kill the extra gap under the circles row */
+      #experience .exp-wrapper{
+        margin-bottom: 0 !important;
+      }
+  
+      /* Reduce the grid gap between the circles row and the panel */
+      #experience .edu-wrapper{
+        row-gap: 4px !important; /* try 0–6px to taste */
+      }
+  
+      /* Remove the tiny bottom padding on each circle node */
+      #experience .exp-node{
+        padding: 0 .25rem 0 !important;
+      }
+  
+      /* Keep the rail tight and panel snug */
+      #experience .exp-timeline{ padding-top: 0 !important; }
+      #experience .exp-timeline::before{ top: 0 !important; }
+      #experience #exp-panel{
+        margin-top: 0 !important;
+        padding-top: .4rem !important; /* lower if you want it even tighter */
+      }
+    }
 
 
 
