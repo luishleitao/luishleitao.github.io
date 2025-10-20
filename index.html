@@ -35,7 +35,10 @@
     img{max-width:100%;display:block}
     a{color:inherit}
 
-    .container{max-width:1350px;margin:0 auto;padding:0 clamp(1rem,2.5vw,4rem)}
+    .container{max-width:1350px;margin:0 auto;padding:0 1.25rem;}
+    @media (min-width:900px){
+      .container{padding:0 4rem;}
+    }
 
     /* ===== LITTLE ANIMS (respect reduced motion) ===== */
     @media (prefers-reduced-motion:no-preference){
