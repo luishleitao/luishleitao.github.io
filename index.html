@@ -727,6 +727,121 @@
       nav a { font-size: 0.9rem; }
     }
 
+    /* ============================
+       MOBILE NAV BUTTON + DRAWER
+       ============================ */
+    .burger {
+      display: none;
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 1.35rem;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    .drawer {
+      display: none;               /* hidden on desktop */
+    }
+
+    /* Show burger, hide inline links on small screens */
+    @media (max-width: 860px) {
+      /* Keep your nav look, just tighten spacing a bit */
+      nav { padding: 0.75rem 5%; gap: 0.75rem; }
+      /* Hide the inline links to avoid 2 lines */
+      nav a { display: none; }
+      /* Keep the Resume button hidden inline as well */
+      nav .cv-box { display: none; }
+
+      /* Show burger on the right */
+      .burger { display: block; }
+
+      /* Drawer styling */
+      .drawer {
+        display: block;                          /* can now be toggled */
+        position: fixed;
+        top: 56px;                               /* matches your nav height (~1rem padding) */
+        left: 0;
+        right: 0;
+        background: #AEC8A4;                     /* your nav color */
+        border-top: 1px solid rgba(0,0,0,.06);
+        z-index: 9;                              /* below nav's z-index:10, above page */
+        overflow: hidden;
+        transition: height .25s ease;
+      }
+      /* collapsed / expanded states */
+      .drawer[aria-hidden="true"] { height: 0; }
+      .drawer[aria-hidden="false"] { height: auto; }
+
+      /* Drawer links */
+      .drawer a {
+        display: block;
+        padding: 0.95rem 5%;
+        color: #fff;
+        text-decoration: none;
+        font-weight: bold;
+        border-bottom: 1px solid rgba(0,0,0,.06);
+      }
+      .drawer a:hover { background: rgba(0,0,0,.06); }
+
+      /* Resume inside drawer */
+      .drawer .cv-button {
+        background-color: #B8563A;
+        color: #fff;
+        padding: 0.7rem 1.1rem;
+        border-radius: 6px;
+        display: inline-block;
+        margin: 0.8rem 5% 1rem;
+        border: none;
+      }
+
+      /* Give sections room below fixed nav+drawer when using jump links */
+      section { scroll-margin-top: 90px; }
+    }
+
+    /* ============================
+       EDUCATION → MOBILE TABS
+       (desktop unchanged)
+       ============================ */
+    @media (max-width: 860px) {
+      .education-container {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+      }
+      /* Turn the left rail into a horizontal tab bar */
+      .edu-menu {
+        width: 100%;
+        height: auto;
+        border-left: none;
+        border-top: 3px solid #ccc;
+        border-radius: 12px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scrollbar-width: thin;
+        background: #FFFFFF; /* keeps nice contrast with your theme */
+      }
+      .edu-menu li {
+        flex: 1 0 auto;
+        justify-content: center;
+        padding: 0.75rem 0.9rem;
+        white-space: nowrap;
+        border-right: 1px solid rgba(0,0,0,.06);
+      }
+      .edu-menu li:last-child { border-right: none; }
+      .edu-indicator { display: none; } /* hide the vertical stripe on mobile */
+      .edu-menu li.active {
+        background: #AEC8A4;
+        color: #3B3B1A;
+      }
+
+      /* Content spacing under the tabs */
+      .edu-details { padding-top: 0.5rem; }
+    }
+
   </style>
 </head>
 
@@ -741,7 +856,17 @@
     <div class="cv-box fall delay-4">
       <a class="cv-button" href="img/cv.pdf" target="_blank">Resume</a>
     </div>
+    <button class="burger" aria-controls="mobile-drawer" aria-expanded="false" aria-label="Open menu" title="Menu">
+      <i class="fa-solid fa-bars"></i>
+    </button>
   </nav>
+  <div id="mobile-drawer" class="drawer" aria-hidden="true">
+    <a href="#education">Education</a>
+    <a href="#experience">Experience</a>
+    <a href="#about">About me</a>
+    <a class="cv-button" href="img/cv.pdf" target="_blank" rel="noopener">Resume</a>
+  </div>
+
 
   <!-- =========================================================
        HERO SECTION
@@ -1072,6 +1197,31 @@
     });
   })();
 
-  document.getElementById('year').textContent = new Date().getFullYear();   
+  document.getElementById('year').textContent = new Date().getFullYear();  
+  
+  // --- Mobile drawer toggle ---
+  (function(){
+    const burger = document.querySelector('.burger');
+    const drawer = document.getElementById('mobile-drawer');
+    if (!burger || !drawer) return;
+
+    burger.addEventListener('click', () => {
+      const expanded = burger.getAttribute('aria-expanded') === 'true';
+      burger.setAttribute('aria-expanded', String(!expanded));
+      drawer.setAttribute('aria-hidden', String(expanded));
+      burger.innerHTML = expanded
+        ? '<i class="fa-solid fa-bars"></i>'
+        : '<i class="fa-solid fa-xmark"></i>';
+    });
+
+    // Close drawer when a link is clicked (nice UX)
+    drawer.addEventListener('click', (e) => {
+      if (e.target.tagName === 'A') {
+        burger.setAttribute('aria-expanded', 'false');
+        drawer.setAttribute('aria-hidden', 'true');
+        burger.innerHTML = '<i class="fa-solid fa-bars"></i>';
+      }
+    });
+  })();
 </script>
 </html>
