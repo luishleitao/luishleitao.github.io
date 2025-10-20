@@ -16,7 +16,7 @@
        - Global font and theme colors
        ========================================================= */
     * {
-      margin: 0
+      margin: 0;
       padding: 0;
       box-sizing: border-box;
       scroll-behavior: smooth;
@@ -929,7 +929,7 @@
       #about .interests-grid > figure.interest-card{
         grid-column: 1 / -1 !important;          /* full row */
       }
-  
+
       /* Choose your image size here */
       #about .interest-card img{
         width: 100%;
@@ -956,6 +956,37 @@
       #experience .exp-node-img.logo-circle img{ width:100%; height:100%; object-fit:contain; transform:none !important; }
       #experience .exp-node-img:not(.logo-circle) img{ width:100%; height:100%; object-fit:cover; }
     }
+
+    /* EXPERIENCE (mobile): place circles row ABOVE the text panel */
+    @media (max-width: 900px){
+      /* Turn the Experience wrapper into a simple 1-column grid */
+      #experience .edu-wrapper{
+        display: grid;
+        grid-template-columns: 1fr;
+        row-gap: 12px;
+      }
+  
+      /* Title line stays first */
+      #experience .section-title-line{
+        grid-column: 1 / -1;
+        grid-row: 1;
+      }
+  
+      /* Circles/timeline come second (ABOVE the text) */
+      #experience .exp-wrapper{
+        grid-column: 1 / -1;
+        grid-row: 2;
+      }
+  
+      /* Details panel sits BELOW the circles */
+      #experience #exp-panel{
+        grid-column: 1 / -1;
+        grid-row: 3;
+        position: static;      /* ensure it flows under the circles */
+        margin-top: .25rem;    /* tiny gap below the circles row */
+      }
+    }
+
 
   </style>
 </head>
