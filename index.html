@@ -1026,22 +1026,22 @@
     @media (max-width: 900px){
       /* reduce space between the rail and the text panel */
       #experience .exp-timeline{
-        padding-top: 16px;          /* was 20–28px */
+        padding-top: 10px;          /* was 20–28px */
       }
       #experience .exp-timeline::before{
-        top: 10px;                  /* keep the rail close */
+        top: 5px;                  /* keep the rail close */
       }
 
       /* circles spacing (sit closer to the panel) */
       #experience .exp-node-img{
-        margin-top: 2px;            /* was 4–8px */
+        margin-top: 0;            /* was 4–8px */
         cursor: pointer;            /* show it’s clickable */
       }
 
       /* panel sits right under the circles */
       #experience #exp-panel{
-        margin-top: .3rem;          /* was .35–.8rem */
-        padding-top: 1rem;          /* no extra room for an X */
+        margin-top: 0.15rem;          /* was .35–.8rem */
+        padding-top: 0.8rem;          /* no extra room for an X */
       }
 
       /* visual active state when a circle is selected */
@@ -1453,34 +1453,34 @@
     (function(){
       const section  = document.getElementById('experience');
       if (!section) return;
-    
+
       const timeline = section.querySelector('.exp-timeline');
       const panel    = section.querySelector('#exp-panel');
       const panelBody= panel ? panel.querySelector('.exp-panel-body') : null;
-    
+
       if (!timeline || !panel || !panelBody) return;
-    
+
       const isMobile = () => window.matchMedia('(max-width: 900px)').matches;
-    
+
       function renderFromNode(node){
         const content = node.querySelector('.exp-content');
         if (!content) return;
-    
+
         // mark active
         timeline.querySelectorAll('.exp-node').forEach(n => n.classList.remove('active'));
         node.classList.add('active');
-    
+
         // render details below the rail
         panelBody.innerHTML = content.innerHTML;
       }
-  
+
       // MOBILE: clicking anywhere on the circle/node opens the text
       timeline.addEventListener('click', (e) => {
         if (!isMobile()) return;
         const node = e.target.closest('.exp-node');
         if (node) renderFromNode(node);
       });
-  
+
       // MOBILE: keyboard (Enter/Space) on the node or image
       timeline.addEventListener('keydown', (e) => {
         if (!isMobile()) return;
@@ -1491,7 +1491,7 @@
           renderFromNode(node);
         }
       });
-  
+
       // Ensure something is shown on initial mobile load
       function ensureDefault(){
         if (!isMobile()) return;
