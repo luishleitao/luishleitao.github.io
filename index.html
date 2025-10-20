@@ -842,6 +842,109 @@
       .edu-details { padding-top: 0.5rem; }
     }
 
+        /* ============================
+       EXPERIENCE – MOBILE OVERLAY
+       Keep circles on a left rail; show details as a panel on right
+       ============================ */
+    @media (max-width: 900px){
+      /* Make the Experience content area the positioning context */
+      #experience .edu-wrapper{ position: relative; }
+    
+      /* Left rail (vertical line) */
+      #experience .exp-timeline{
+        position: relative;
+        padding: 1rem 0 0;
+        min-height: unset; /* no fixed height on mobile */
+      }
+      #experience .exp-timeline::before{
+        content:"";
+        position:absolute;
+        left: 24px; /* rail x-position */
+        top: 0;
+        bottom: 0; /* full height of timeline content */
+        width: 3px;
+        background: var(--accent2, #8A784E);
+        transform: none;
+        z-index: 0;
+      }
+    
+      /* Nodes fill width but align to the left rail */
+      #experience .exp-node{
+        width: 100%;
+        left: 0;
+        padding: 0 0 1.2rem 3.75rem; /* space for rail + circle */
+        align-items: flex-start;
+        min-height: unset;
+      }
+      #experience .exp-node + .exp-node{ margin-top: .75rem; }
+    
+      /* Circle images smaller on phones */
+      #experience .exp-node-img{
+        --exp-img: 80px;
+        width: 80px; height: 80px;
+        box-shadow: 0 0 0 2px var(--accent2, #8A784E);
+      }
+    
+      /* Clickable dot sits over the rail */
+      #experience .exp-dot{
+        left: 24px;
+        right: auto;
+        transform: translate(-50%, 0);
+        top: 28px; /* center against 80px circle */
+        width: 26px; height: 26px;
+      }
+    
+      /* We won't show the inline desktop cards on mobile */
+      #experience .exp-content{
+        display: none !important;
+        position: static !important;
+        max-width: none !important;
+        box-shadow: none !important;
+        border: 0 !important;
+        padding: 0 !important;
+        background: transparent !important;
+      }
+    
+      /* ===== Right-side overlay panel ===== */
+      #experience .exp-panel{
+        position: absolute;
+        /* start right beside the rail + node padding */
+        left: 120px;               /* 24px rail + gap + circle width */
+        right: 0;
+        top: 0;                    /* from top of experience content (under the section title) */
+        background: #FFFFFF;
+        border: 1px solid rgba(0,0,0,.06);
+        border-radius: 14px;
+        box-shadow: 0 12px 24px rgba(0,0,0,.08);
+        padding: 1rem 1rem 1.1rem;
+        max-height: 72vh;          /* contained height on phones */
+        overflow: auto;
+        display: none;             /* hidden until a node is tapped */
+        z-index: 2;
+      }
+      #experience .exp-panel.open{ display: block; }
+    
+      /* Panel close button */
+      .exp-panel-close{
+        position: sticky;
+        top: 0;
+        margin: -0.5rem -0.5rem 0 auto;
+        background: #fff;
+        border: 1px solid rgba(0,0,0,.08);
+        width: 34px; height: 34px;
+        border-radius: 8px;
+        display: grid; place-items: center;
+        cursor: pointer;
+      }
+    
+      /* Typography inside the panel */
+      #experience .exp-panel h3{ margin-bottom: .25rem; font-size: 1.1rem; }
+      #experience .exp-panel .edu-years{ margin-bottom: .55rem; font-size: .9rem; color: var(--accent2, #8A784E); }
+      #experience .exp-panel ul{ list-style: circle; padding-left: 1.1rem; }
+      #experience .exp-panel li{ margin: .4rem 0; }
+    }
+
+
   </style>
 </head>
 
@@ -895,6 +998,13 @@
       <div class="section-title-line">
         <span class="title-text">Education</span>
         <div class="line"></div>
+      </div>
+
+      <div id="exp-panel" class="exp-panel" aria-hidden="true" role="dialog" aria-label="Experience details">
+        <button class="exp-panel-close" aria-label="Close details" title="Close">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+        <div class="exp-panel-body"></div>
       </div>
 
       <div class="education-container">
@@ -1221,6 +1331,75 @@
         drawer.setAttribute('aria-hidden', 'true');
         burger.innerHTML = '<i class="fa-solid fa-bars"></i>';
       }
+    });
+  })();
+  (function(){
+    const section = document.getElementById('experience');
+    if (!section) return;
+
+    const panel = section.querySelector('#exp-panel');
+    const panelBody = panel?.querySelector('.exp-panel-body');
+    const closeBtn = panel?.querySelector('.exp-panel-close');
+    const timeline = section.querySelector('.exp-timeline');
+
+    function isMobile(){ return window.matchMedia('(max-width: 900px)').matches; }
+
+    function showPanelFromNode(node){
+      if (!panel || !panelBody) return;
+      const content = node.querySelector('.exp-content');
+      if (!content) return;
+      panelBody.innerHTML = content.innerHTML; // reuse your existing content
+      panel.setAttribute('aria-hidden','false');
+      panel.classList.add('open');
+      // mark active (keeps your existing active styling)
+      timeline.querySelectorAll('.exp-node').forEach(n => n.classList.remove('active'));
+      node.classList.add('active');
+    }
+
+    function hidePanel(){
+      if (!panel) return;
+      panel.classList.remove('open');
+      panel.setAttribute('aria-hidden','true');
+    }
+
+    // Toggle via node/dot click
+    timeline?.addEventListener('click', (e) => {
+      const node = e.target.closest('.exp-node');
+      if (!node || !isMobile()) return;
+
+      // If clicking the already-active node while panel open → close
+      const isActive = node.classList.contains('active');
+      const isOpen = panel.classList.contains('open');
+      if (isActive && isOpen){
+        hidePanel();
+        return;
+      }
+      showPanelFromNode(node);
+    });
+
+    // Keyboard support
+    timeline?.addEventListener('keydown', (e) => {
+      if (!isMobile()) return;
+      const node = e.target.closest('.exp-node');
+      if (!node) return;
+      if (e.key === 'Enter' || e.key === ' '){
+        e.preventDefault();
+        showPanelFromNode(node);
+      }
+    });
+
+    // Close button
+    closeBtn?.addEventListener('click', hidePanel);
+
+    // ESC to close
+    window.addEventListener('keydown', (e) => {
+      if (!isMobile()) return;
+      if (e.key === 'Escape') hidePanel();
+    });
+
+    // If resizing up to desktop, ensure panel is hidden
+    window.addEventListener('resize', () => {
+      if (!isMobile()) hidePanel();
     });
   })();
 </script>
